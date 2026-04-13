@@ -63,23 +63,8 @@ body {
 /* ─── Typography ────────────────────────────────────────────────────── */
 h1, h2, h3, h4, h5, h6 { font-weight: 700; letter-spacing: -0.02em; margin: 0; }
 p { margin: 0; }
-/* Base button reset — preserve backgrounds set via style attribute */
-button { cursor: pointer; border: none; font-family: inherit; background: none; }
-
-/* Mint green primary buttons — highest specificity override */
-button[data-variant="primary"],
-.btn-primary {
-  background-color: #00e5a0 !important;
-  color: #050505 !important;
-}
-button[data-variant="primary"]:hover,
-.btn-primary:hover {
-  background-color: #00f0a8 !important;
-}
-button[data-variant="primary"]:active,
-.btn-primary:active {
-  background-color: #00c98c !important;
-}
+/* Base button reset — do NOT reset background so inline styles can apply */
+button { cursor: pointer; border: none; font-family: inherit; }
 
 /* Active toggle pill */
 .toggle-active {

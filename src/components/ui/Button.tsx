@@ -20,78 +20,43 @@ const sizeStyles: Record<Size, string> = {
   xl: "h-16 px-8  text-lg  font-bold rounded-3xl",
 };
 
-const secondaryStyles = "bg-[#1a1a1d] text-[#f5f5f7] border border-[rgba(255,255,255,0.08)] hover:bg-[#212124]";
-const ghostStyles     = "text-[#9999a8] hover:text-[#f5f5f7] hover:bg-[rgba(255,255,255,0.05)]";
-const dangerStyles    = "bg-[rgba(255,77,77,0.15)] text-[#ff4d4d] border border-[rgba(255,77,77,0.2)] hover:bg-[rgba(255,77,77,0.25)]";
-const outlineStyles   = "border text-[#00e5a0] border-[rgba(0,229,160,0.4)] hover:bg-[rgba(0,229,160,0.08)]";
+// All variants use real <button> elements. Color is forced via inline style on primary.
+const variantClass: Record<Variant, string> = {
+  primary:  "font-bold",
+  secondary:"bg-[#1a1a1d] text-[#f5f5f7] border border-[rgba(255,255,255,0.08)] hover:bg-[#212124]",
+  ghost:    "text-[#9999a8] hover:text-[#f5f5f7] hover:bg-[rgba(255,255,255,0.05)]",
+  danger:   "bg-[rgba(255,77,77,0.15)] text-[#ff4d4d] border border-[rgba(255,77,77,0.2)] hover:bg-[rgba(255,77,77,0.25)]",
+  outline:  "border text-[#00e5a0] border-[rgba(0,229,160,0.4)] hover:bg-[rgba(0,229,160,0.08)]",
+};
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  (
-    {
-      variant = "primary",
-      size = "lg",
-      loading = false,
-      fullWidth = false,
-      className,
-      children,
-      disabled,
-      onClick,
-      type,
-      ...props
-    },
-    ref
-  ) => {
-    const baseClass = cn(
-      "inline-flex items-center justify-center gap-2 cursor-pointer select-none outline-none",
-      "font-semibold transition-all duration-200",
-      "active:scale-[0.97]",
-      sizeStyles[size],
-      fullWidth && "w-full",
-      (disabled || loading) && "opacity-40 pointer-events-none",
-      className
-    );
+  ({ variant = "primary", size = "lg", loading = false, fullWidth = false, className, children, disabled, style, ...props }, ref) => {
 
-    // Primary uses a div to bypass all global button CSS resets
-    if (variant === "primary") {
-      return (
-        <div
-          role="button"
-          tabIndex={disabled || loading ? -1 : 0}
-          aria-disabled={disabled || loading}
-          onClick={disabled || loading ? undefined : onClick as React.MouseEventHandler<HTMLDivElement>}
-          onKeyDown={(e) => {
-            if ((e.key === "Enter" || e.key === " ") && !disabled && !loading) {
-              e.preventDefault();
-              (onClick as React.MouseEventHandler<HTMLDivElement> | undefined)?.(e as unknown as React.MouseEvent<HTMLDivElement>);
-            }
-          }}
-          className={baseClass}
-          style={{
-            backgroundColor: "#00e5a0",
-            color: "#050505",
-            boxShadow: "0 0 24px rgba(0,229,160,0.25)",
-            transitionTimingFunction: "cubic-bezier(0.16,1,0.3,1)",
-          }}
-        >
-          {loading ? <LoadingDots /> : children}
-        </div>
-      );
-    }
+    const isPrimary = variant === "primary";
 
     return (
       <button
         ref={ref}
-        type={type}
         disabled={disabled || loading}
-        onClick={onClick}
         className={cn(
-          baseClass,
-          variant === "secondary" && secondaryStyles,
-          variant === "ghost"     && ghostStyles,
-          variant === "danger"    && dangerStyles,
-          variant === "outline"   && outlineStyles,
+          "inline-flex items-center justify-center gap-2 cursor-pointer select-none outline-none",
+          "font-semibold transition-all duration-200",
+          "active:scale-[0.97] disabled:opacity-40 disabled:pointer-events-none",
+          variantClass[variant],
+          sizeStyles[size],
+          fullWidth && "w-full",
+          className
         )}
-        style={{ transitionTimingFunction: "cubic-bezier(0.16,1,0.3,1)" }}
+        style={{
+          transitionTimingFunction: "cubic-bezier(0.16,1,0.3,1)",
+          // Force primary colours — these override EVERYTHING including global resets
+          ...(isPrimary && {
+            backgroundColor: "#00e5a0",
+            color: "#050505",
+            boxShadow: "0 0 24px rgba(0,229,160,0.25)",
+          }),
+          ...style,
+        }}
         {...props}
       >
         {loading ? <LoadingDots /> : children}
@@ -108,7 +73,7 @@ function LoadingDots() {
         <span
           key={i}
           className="w-1.5 h-1.5 rounded-full animate-bounce"
-          style={{ background: "currentColor", animationDelay: `${i * 120}ms`, animationDuration: "0.8s" }}
+          style={{ backgroundColor: "#050505", animationDelay: `${i * 120}ms`, animationDuration: "0.8s" }}
         />
       ))}
     </span>
