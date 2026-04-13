@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { BookText, Headphones, Play, Zap, Leaf, Music, Rocket, Brain, Flame, MessageCircle, BookOpen, Hash, Globe, Sparkles, Monitor } from "lucide-react";
 import { BlobCharacter } from "@/components/ui/BlobCharacter";
 import { Button } from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
@@ -10,7 +11,7 @@ type Step = {
   id: number;
   question: string;
   subtext?: string;
-  options: { id: string; label: string; emoji: string; desc?: string }[];
+  options: { id: string; label: string; icon: React.ReactNode; desc?: string }[];
   multi?: boolean;
 };
 
@@ -20,10 +21,10 @@ const steps: Step[] = [
     question: "Hey! How do you like to learn?",
     subtext: "We'll personalise everything just for you.",
     options: [
-      { id: "reading", label: "Reading & writing", emoji: "📖", desc: "I love taking notes and reading" },
-      { id: "listening", label: "Audio & talking", emoji: "🎧", desc: "Podcasts, explanations, discussions" },
-      { id: "watching", label: "Video & visuals", emoji: "🎬", desc: "Diagrams, videos, seeing things" },
-      { id: "doing", label: "Hands-on practice", emoji: "⚡", desc: "Quizzes, exercises, making things" },
+      { id: "reading", label: "Reading & writing", icon: <BookText size={24} strokeWidth={1.8} />, desc: "I love taking notes and reading" },
+      { id: "listening", label: "Audio & talking", icon: <Headphones size={24} strokeWidth={1.8} />, desc: "Podcasts, explanations, discussions" },
+      { id: "watching", label: "Video & visuals", icon: <Play size={24} strokeWidth={1.8} />, desc: "Diagrams, videos, seeing things" },
+      { id: "doing", label: "Hands-on practice", icon: <Zap size={24} strokeWidth={1.8} />, desc: "Quizzes, exercises, making things" },
     ],
   },
   {
@@ -31,9 +32,9 @@ const steps: Step[] = [
     question: "What pace feels right for you?",
     subtext: "You can always change this later.",
     options: [
-      { id: "slow", label: "Take it slow", emoji: "🌱", desc: "Thorough explanations, no rushing" },
-      { id: "medium", label: "Steady rhythm", emoji: "🎵", desc: "Balanced pace that builds naturally" },
-      { id: "fast", label: "Move quickly", emoji: "🚀", desc: "Efficient, challenge me more" },
+      { id: "slow", label: "Take it slow", icon: <Leaf size={24} strokeWidth={1.8} />, desc: "Thorough explanations, no rushing" },
+      { id: "medium", label: "Steady rhythm", icon: <Music size={24} strokeWidth={1.8} />, desc: "Balanced pace that builds naturally" },
+      { id: "fast", label: "Move quickly", icon: <Rocket size={24} strokeWidth={1.8} />, desc: "Efficient, challenge me more" },
     ],
   },
   {
@@ -42,14 +43,14 @@ const steps: Step[] = [
     subtext: "Pick as many as you like.",
     multi: true,
     options: [
-      { id: "maths", label: "Maths", emoji: "🔢" },
-      { id: "science", label: "Science", emoji: "🔬" },
-      { id: "history", label: "History", emoji: "🏛️" },
-      { id: "english", label: "English", emoji: "📝" },
-      { id: "coding", label: "Coding", emoji: "💻" },
-      { id: "languages", label: "Languages", emoji: "🌍" },
-      { id: "arts", label: "Arts", emoji: "🎨" },
-      { id: "philosophy", label: "Philosophy", emoji: "💭" },
+      { id: "maths", label: "Maths", icon: <Hash size={24} strokeWidth={1.8} /> },
+      { id: "science", label: "Science", icon: <Flame size={24} strokeWidth={1.8} /> },
+      { id: "history", label: "History", icon: <BookOpen size={24} strokeWidth={1.8} /> },
+      { id: "english", label: "English", icon: <MessageCircle size={24} strokeWidth={1.8} /> },
+      { id: "coding", label: "Coding", icon: <Monitor size={24} strokeWidth={1.8} /> },
+      { id: "languages", label: "Languages", icon: <Globe size={24} strokeWidth={1.8} /> },
+      { id: "arts", label: "Arts", icon: <Sparkles size={24} strokeWidth={1.8} /> },
+      { id: "philosophy", label: "Philosophy", icon: <Brain size={24} strokeWidth={1.8} /> },
     ],
   },
   {
@@ -169,7 +170,7 @@ export default function OnboardingPage() {
               value={name}
               onChange={(e) => setName(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && canContinue && advance()}
-              className="w-full h-16 rounded-2xl bg-[#1a1a1d] border border-[rgba(255,255,255,0.07)] text-[#f5f5f7] text-xl font-semibold px-5 placeholder:text-[#3a3a3f] focus:outline-none focus:border-[rgba(0,229,160,0.5)] focus:shadow-[0_0_0_3px_rgba(0,229,160,0.1)] transition-all"
+              className="w-full h-16 rounded-2xl bg-[#1a1a1d] border border-[rgba(255,255,255,0.07)] text-[#f5f5f7] text-xl font-semibold px-5 placeholder:text-[#7a7a90] focus:outline-none focus:border-[rgba(0,229,160,0.5)] focus:shadow-[0_0_0_3px_rgba(0,229,160,0.1)] transition-all"
               style={{ letterSpacing: "-0.01em" }}
             />
           </div>
@@ -204,7 +205,7 @@ export default function OnboardingPage() {
                     transitionTimingFunction: "cubic-bezier(0.16,1,0.3,1)",
                   }}
                 >
-                  <span className="text-2xl">{opt.emoji}</span>
+                  <div className="flex items-center justify-center" style={{ width: 24, height: 24 }}>{opt.icon}</div>
                   <div className="flex flex-col gap-0.5">
                     <span
                       className={cn(

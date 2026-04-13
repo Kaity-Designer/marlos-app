@@ -2,6 +2,10 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import {
+  Zap, Flame, BookOpen, FlaskConical, Globe, ChevronRight,
+  Leaf, Triangle, Landmark, BookMarked, Brain, ArrowRight,
+} from "lucide-react";
 import { BlobCharacter } from "@/components/ui/BlobCharacter";
 import { cn } from "@/lib/utils";
 
@@ -9,7 +13,7 @@ type Course = {
   id: string;
   title: string;
   subject: string;
-  emoji: string;
+  icon: React.ReactNode;
   progress: number;
   duration: string;
   difficulty: "Beginner" | "Intermediate" | "Advanced";
@@ -21,7 +25,7 @@ const featuredCourses: Course[] = [
     id: "1",
     title: "Introduction to Algebra",
     subject: "Maths",
-    emoji: "🔢",
+    icon: <Triangle size={36} strokeWidth={1.5} color="#fff" />,
     progress: 35,
     duration: "12 lessons",
     difficulty: "Beginner",
@@ -31,7 +35,7 @@ const featuredCourses: Course[] = [
     id: "2",
     title: "The Human Body",
     subject: "Biology",
-    emoji: "🫀",
+    icon: <FlaskConical size={36} strokeWidth={1.5} color="#fff" />,
     progress: 60,
     duration: "8 lessons",
     difficulty: "Intermediate",
@@ -41,7 +45,7 @@ const featuredCourses: Course[] = [
     id: "3",
     title: "World War II",
     subject: "History",
-    emoji: "🌍",
+    icon: <Globe size={36} strokeWidth={1.5} color="#fff" />,
     progress: 10,
     duration: "15 lessons",
     difficulty: "Intermediate",
@@ -50,10 +54,10 @@ const featuredCourses: Course[] = [
 ];
 
 const quickTopics = [
-  { id: "a", label: "Photosynthesis", emoji: "🌿", color: "#00e5a0" },
-  { id: "b", label: "Pythagoras", emoji: "📐", color: "#4d9fff" },
-  { id: "c", label: "The Roman Empire", emoji: "🏛️", color: "#f5a623" },
-  { id: "d", label: "Short stories", emoji: "📖", color: "#a855f7" },
+  { id: "a", label: "Photosynthesis",   icon: <Leaf size={20} strokeWidth={1.8} />,      color: "#00e5a0" },
+  { id: "b", label: "Pythagoras",       icon: <Triangle size={20} strokeWidth={1.8} />,  color: "#4d9fff" },
+  { id: "c", label: "The Roman Empire", icon: <Landmark size={20} strokeWidth={1.8} />,  color: "#f5a623" },
+  { id: "d", label: "Short stories",    icon: <BookMarked size={20} strokeWidth={1.8} />, color: "#a855f7" },
 ];
 
 function getGreeting() {
@@ -75,23 +79,17 @@ export default function HomePage() {
   const [streak] = useState(5);
 
   return (
-    <div className="flex flex-col min-h-full scroll overflow-y-auto">
+    <div className="flex flex-col min-h-full overflow-y-auto">
       {/* Header */}
       <div
         className="px-5 pt-14 pb-6"
-        style={{
-          background:
-            "linear-gradient(180deg, rgba(13,25,18,0.95) 0%, rgba(15,15,16,0) 100%)",
-        }}
+        style={{ background: "linear-gradient(180deg, rgba(13,25,18,0.95) 0%, rgba(15,15,16,0) 100%)" }}
       >
         <div className="flex items-center justify-between mb-6">
           <div className="animate-fade-up">
-            <p className="text-xs text-[#5a5a68] font-medium mb-0.5">{greeting}</p>
-            <h1
-              className="text-2xl font-bold text-[#f5f5f7]"
-              style={{ letterSpacing: "-0.03em" }}
-            >
-              Hey, {name} 👋
+            <p className="text-xs text-[#9999a8] font-medium mb-0.5">{greeting}</p>
+            <h1 className="text-2xl font-bold text-[#f5f5f7]" style={{ letterSpacing: "-0.03em" }}>
+              Hey, {name}
             </h1>
           </div>
           <Link href="/profile" className="animate-fade-up delay-100">
@@ -104,16 +102,16 @@ export default function HomePage() {
         {/* XP + Streak bar */}
         <div className="flex gap-3 animate-fade-up delay-200">
           <div className="flex-1 flex items-center gap-3 bg-[#141416] border border-[rgba(255,255,255,0.07)] rounded-2xl px-4 py-3">
-            <span className="text-xl">⚡</span>
+            <Zap size={20} color="#00e5a0" strokeWidth={2} />
             <div>
-              <p className="text-[10px] text-[#5a5a68] uppercase font-semibold tracking-wider">XP</p>
+              <p className="text-[10px] text-[#9999a8] uppercase font-semibold tracking-wider">XP</p>
               <p className="text-base font-bold text-[#f5f5f7]">{xp.toLocaleString()}</p>
             </div>
           </div>
           <div className="flex-1 flex items-center gap-3 bg-[#141416] border border-[rgba(255,255,255,0.07)] rounded-2xl px-4 py-3">
-            <span className="text-xl">🔥</span>
+            <Flame size={20} color="#f5a623" strokeWidth={2} />
             <div>
-              <p className="text-[10px] text-[#5a5a68] uppercase font-semibold tracking-wider">Streak</p>
+              <p className="text-[10px] text-[#9999a8] uppercase font-semibold tracking-wider">Streak</p>
               <p className="text-base font-bold text-[#f5f5f7]">{streak} days</p>
             </div>
           </div>
@@ -131,21 +129,18 @@ export default function HomePage() {
               boxShadow: "0 0 40px rgba(0,229,160,0.08)",
             }}
           >
-            {/* Glow */}
-            <div
-              className="absolute -right-8 -top-8 w-40 h-40 rounded-full opacity-20"
-              style={{ background: "radial-gradient(circle, #00e5a0 0%, transparent 70%)" }}
-            />
+            <div className="absolute -right-8 -top-8 w-40 h-40 rounded-full opacity-20"
+              style={{ background: "radial-gradient(circle, #00e5a0 0%, transparent 70%)" }} />
             <div className="relative flex items-center gap-4">
               <BlobCharacter size={56} mood="happy" animated />
               <div className="flex-1 min-w-0">
-                <p className="text-xs text-[#00e5a0] font-semibold uppercase tracking-wider mb-1">
-                  AI Tutor
-                </p>
+                <p className="text-xs text-[#00e5a0] font-semibold uppercase tracking-wider mb-1">AI Tutor</p>
                 <p className="text-base font-bold text-[#f5f5f7]" style={{ letterSpacing: "-0.02em" }}>
                   What do you want to explore today?
                 </p>
-                <p className="text-xs text-[#5a5a68] mt-1">Ask me anything →</p>
+                <p className="text-xs text-[#9999a8] mt-1 flex items-center gap-1">
+                  Ask me anything <ArrowRight size={11} strokeWidth={2} />
+                </p>
               </div>
             </div>
           </div>
@@ -157,12 +152,12 @@ export default function HomePage() {
             <h2 className="text-base font-bold text-[#f5f5f7]" style={{ letterSpacing: "-0.02em" }}>
               Continue learning
             </h2>
-            <Link href="/library" className="text-xs text-[#00e5a0] font-medium">
-              See all
+            <Link href="/library" className="text-xs text-[#00e5a0] font-medium flex items-center gap-1">
+              See all <ChevronRight size={12} strokeWidth={2.5} />
             </Link>
           </div>
 
-          <div className="flex gap-4 overflow-x-auto pb-1 -mx-5 px-5 scroll">
+          <div className="flex gap-4 overflow-x-auto pb-1 -mx-5 px-5">
             {featuredCourses.map((course, i) => (
               <Link
                 key={course.id}
@@ -170,29 +165,22 @@ export default function HomePage() {
                 className="flex-shrink-0 w-60"
                 style={{ animationDelay: `${i * 80 + 300}ms` }}
               >
-                <div className="bg-[#141416] border border-[rgba(255,255,255,0.07)] rounded-3xl overflow-hidden hover-lift">
-                  {/* Card header gradient */}
-                  <div
-                    className={cn("h-28 flex items-center justify-center bg-gradient-to-br", course.color)}
-                    style={{ opacity: 0.9 }}
-                  >
-                    <span className="text-5xl">{course.emoji}</span>
+                <div className="bg-[#141416] border border-[rgba(255,255,255,0.07)] rounded-3xl overflow-hidden">
+                  <div className={cn("h-28 flex items-center justify-center bg-gradient-to-br", course.color)}>
+                    {course.icon}
                   </div>
-
                   <div className="p-4 space-y-3">
                     <div>
-                      <p className="text-[10px] text-[#5a5a68] uppercase font-semibold tracking-wider mb-1">
+                      <p className="text-[10px] text-[#9999a8] uppercase font-semibold tracking-wider mb-1">
                         {course.subject}
                       </p>
                       <p className="text-sm font-bold text-[#f5f5f7]" style={{ letterSpacing: "-0.01em" }}>
                         {course.title}
                       </p>
                     </div>
-
-                    {/* Progress */}
                     <div className="space-y-1.5">
                       <div className="flex items-center justify-between">
-                        <span className="text-xs text-[#5a5a68]">{course.duration}</span>
+                        <span className="text-xs text-[#9999a8]">{course.duration}</span>
                         <span className="text-xs font-semibold text-[#00e5a0]">{course.progress}%</span>
                       </div>
                       <div className="h-1.5 bg-[#1a1a1d] rounded-full overflow-hidden">
@@ -209,7 +197,7 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* Quick ask topics */}
+        {/* Quick topics */}
         <section className="animate-fade-up delay-400">
           <h2 className="text-base font-bold text-[#f5f5f7] mb-4" style={{ letterSpacing: "-0.02em" }}>
             Quick topics
@@ -221,10 +209,8 @@ export default function HomePage() {
                 href={`/chat?topic=${encodeURIComponent(topic.label)}`}
                 style={{ animationDelay: `${i * 60 + 400}ms` }}
               >
-                <div
-                  className="flex items-center gap-3 p-4 rounded-2xl border border-[rgba(255,255,255,0.07)] bg-[#141416] hover:bg-[#1a1a1d] transition-all duration-200 active:scale-[0.97] press-scale"
-                >
-                  <span className="text-2xl">{topic.emoji}</span>
+                <div className="flex items-center gap-3 p-4 rounded-2xl border border-[rgba(255,255,255,0.07)] bg-[#141416] hover:bg-[#1a1a1d] transition-all duration-200 active:scale-[0.97]">
+                  <span style={{ color: topic.color }}>{topic.icon}</span>
                   <span className="text-sm font-semibold text-[#f5f5f7] leading-tight">{topic.label}</span>
                 </div>
               </Link>
@@ -242,21 +228,21 @@ export default function HomePage() {
                 borderColor: "rgba(168,85,247,0.25)",
               }}
             >
-              <div
-                className="absolute -right-6 -bottom-6 w-32 h-32 rounded-full opacity-20"
-                style={{ background: "radial-gradient(circle, #a855f7 0%, transparent 70%)" }}
-              />
+              <div className="absolute -right-6 -bottom-6 w-32 h-32 rounded-full opacity-20"
+                style={{ background: "radial-gradient(circle, #a855f7 0%, transparent 70%)" }} />
               <div className="flex items-center gap-4 relative">
                 <div
-                  className="w-14 h-14 rounded-2xl flex items-center justify-center text-2xl"
+                  className="w-14 h-14 rounded-2xl flex items-center justify-center"
                   style={{ background: "rgba(168,85,247,0.15)", border: "1px solid rgba(168,85,247,0.2)" }}
                 >
-                  🧠
+                  <Brain size={28} color="#a855f7" strokeWidth={1.5} />
                 </div>
                 <div>
                   <p className="text-xs font-semibold text-[#a855f7] uppercase tracking-wider mb-1">Daily challenge</p>
                   <p className="text-sm font-bold text-[#f5f5f7]">5 questions · 3 min</p>
-                  <p className="text-xs text-[#5a5a68] mt-0.5">+50 XP on completion</p>
+                  <p className="text-xs text-[#9999a8] mt-0.5 flex items-center gap-1">
+                    <Zap size={10} strokeWidth={2} color="#f5a623" /> +50 XP on completion
+                  </p>
                 </div>
               </div>
             </div>

@@ -2,42 +2,51 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import {
+  Bell, Accessibility, Lock, Info, ChevronRight,
+  Zap, Flame, BookText, Headphones, Play, Globe,
+  Star, Trophy, Brain, Rocket, Gem, Compass, Pencil,
+} from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
 
 type LearningMode = "text" | "audio" | "video" | "spatial";
 
-const modeOptions: { id: LearningMode; label: string; emoji: string; desc: string }[] = [
-  { id: "text",    label: "Text",    emoji: "📖", desc: "Reading & writing-based" },
-  { id: "audio",   label: "Audio",   emoji: "🎧", desc: "Audio explanations" },
-  { id: "video",   label: "Video",   emoji: "🎬", desc: "Visual & video content" },
-  { id: "spatial", label: "Spatial", emoji: "🌐", desc: "Coming soon: AR/3D" },
+const modeOptions: { id: LearningMode; label: string; icon: React.ReactNode; desc: string }[] = [
+  { id: "text",    label: "Text",    icon: <BookText size={20} strokeWidth={1.8} />,     desc: "Reading & writing-based" },
+  { id: "audio",   label: "Audio",   icon: <Headphones size={20} strokeWidth={1.8} />,   desc: "Audio explanations" },
+  { id: "video",   label: "Video",   icon: <Play size={20} strokeWidth={1.8} />,          desc: "Visual & video content" },
+  { id: "spatial", label: "Spatial", icon: <Globe size={20} strokeWidth={1.8} />,         desc: "Coming soon: AR/3D" },
 ];
 
 const achievements = [
-  { id: "1", emoji: "🌟", label: "First Lesson",    earned: true  },
-  { id: "2", emoji: "🔥", label: "5-Day Streak",    earned: true  },
-  { id: "3", emoji: "🧠", label: "Deep Thinker",    earned: true  },
-  { id: "4", emoji: "🚀", label: "Fast Learner",    earned: false },
-  { id: "5", emoji: "💎", label: "Top Student",     earned: false },
-  { id: "6", emoji: "🌍", label: "Curious Explorer", earned: false },
+  { id: "1", icon: <Star size={22} strokeWidth={1.5} />,    label: "First Lesson",     earned: true  },
+  { id: "2", icon: <Flame size={22} strokeWidth={1.5} />,   label: "5-Day Streak",     earned: true  },
+  { id: "3", icon: <Brain size={22} strokeWidth={1.5} />,   label: "Deep Thinker",     earned: true  },
+  { id: "4", icon: <Rocket size={22} strokeWidth={1.5} />,  label: "Fast Learner",     earned: false },
+  { id: "5", icon: <Gem size={22} strokeWidth={1.5} />,     label: "Top Student",      earned: false },
+  { id: "6", icon: <Compass size={22} strokeWidth={1.5} />, label: "Curious Explorer", earned: false },
 ];
 
 const stats = [
-  { label: "Lessons done",   value: "24" },
+  { label: "Lessons done",   value: "24"  },
   { label: "Hours learned",  value: "8.5" },
-  { label: "Topics covered", value: "12" },
+  { label: "Topics covered", value: "12"  },
   { label: "Best streak",    value: "7d"  },
+];
+
+const settingsItems = [
+  { label: "Notifications",  icon: <Bell size={18} strokeWidth={1.8} /> },
+  { label: "Accessibility",  icon: <Accessibility size={18} strokeWidth={1.8} /> },
+  { label: "Privacy & Data", icon: <Lock size={18} strokeWidth={1.8} /> },
+  { label: "About Marlos",   icon: <Info size={18} strokeWidth={1.8} /> },
 ];
 
 function getStoredUser() {
   if (typeof window === "undefined") return { name: "Learner", email: "" };
   const session = JSON.parse(localStorage.getItem("marlos-session") || "{}");
   const profile = JSON.parse(localStorage.getItem("marlos-profile") || "{}");
-  return {
-    name: session.name || profile.name || "Learner",
-    email: session.email || "",
-  };
+  return { name: session.name || profile.name || "Learner", email: session.email || "" };
 }
 
 export default function ProfilePage() {
@@ -69,7 +78,7 @@ export default function ProfilePage() {
   const level = Math.floor(xp / 100) + 1;
 
   return (
-    <div className="flex flex-col min-h-full overflow-y-auto scroll">
+    <div className="flex flex-col min-h-full overflow-y-auto">
       {/* Header / Avatar */}
       <div
         className="flex flex-col items-center gap-4 px-5 pt-14 pb-8"
@@ -83,9 +92,7 @@ export default function ProfilePage() {
           >
             {name[0]?.toUpperCase()}
           </div>
-          <div
-            className="absolute -bottom-1 -right-1 w-8 h-8 rounded-full bg-[#00e5a0] flex items-center justify-center text-xs font-bold text-[#0f0f10] border-2 border-[#0f0f10]"
-          >
+          <div className="absolute -bottom-1 -right-1 w-8 h-8 rounded-full bg-[#00e5a0] flex items-center justify-center text-xs font-bold text-[#0f0f10] border-2 border-[#0f0f10]">
             {level}
           </div>
         </div>
@@ -109,22 +116,19 @@ export default function ProfilePage() {
             </h1>
             <button
               onClick={() => { setEditing(true); setEditName(name); }}
-              className="text-[#5a5a68] hover:text-[#9999a8] transition-colors"
+              className="text-[#7a7a90] hover:text-[#9999a8] transition-colors"
             >
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
-                <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-                <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
+              <Pencil size={14} strokeWidth={2} />
             </button>
           </div>
         )}
 
-        {email && <p className="text-sm text-[#5a5a68]">{email}</p>}
+        {email && <p className="text-sm text-[#9999a8]">{email}</p>}
 
         {/* XP bar */}
         <div className="w-full bg-[#141416] border border-[rgba(255,255,255,0.07)] rounded-2xl p-4 space-y-2 animate-fade-up delay-100">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-[#5a5a68]">Level {level}</span>
+            <span className="text-xs font-semibold text-[#9999a8]">Level {level}</span>
             <span className="text-xs font-semibold text-[#00e5a0]">{xp} XP · {xpToNext} to next level</span>
           </div>
           <div className="h-2 bg-[#1a1a1d] rounded-full overflow-hidden">
@@ -133,10 +137,12 @@ export default function ProfilePage() {
               style={{ width: `${(xp % 100)}%` }}
             />
           </div>
-          <div className="flex gap-2">
-            <span className="text-xs text-[#5a5a68]">⚡ {xp} XP total</span>
+          <div className="flex items-center gap-2">
+            <Zap size={11} strokeWidth={2} color="#00e5a0" />
+            <span className="text-xs text-[#9999a8]">{xp} XP total</span>
             <span className="text-[#3a3a3f]">·</span>
-            <span className="text-xs text-[#5a5a68]">🔥 {streak} day streak</span>
+            <Flame size={11} strokeWidth={2} color="#f5a623" />
+            <span className="text-xs text-[#9999a8]">{streak} day streak</span>
           </div>
         </div>
       </div>
@@ -144,23 +150,20 @@ export default function ProfilePage() {
       <div className="flex flex-col gap-6 px-5 pb-8">
         {/* Stats */}
         <section className="animate-fade-up delay-200">
-          <h2 className="text-sm font-bold text-[#5a5a68] uppercase tracking-wider mb-3">Your progress</h2>
+          <h2 className="text-sm font-bold text-[#9999a8] uppercase tracking-wider mb-3">Your progress</h2>
           <div className="grid grid-cols-2 gap-3">
             {stats.map((stat) => (
-              <div
-                key={stat.label}
-                className="bg-[#141416] border border-[rgba(255,255,255,0.07)] rounded-2xl p-4 text-center"
-              >
+              <div key={stat.label} className="bg-[#141416] border border-[rgba(255,255,255,0.07)] rounded-2xl p-4 text-center">
                 <p className="text-2xl font-bold text-[#f5f5f7]" style={{ letterSpacing: "-0.03em" }}>{stat.value}</p>
-                <p className="text-xs text-[#5a5a68] mt-0.5">{stat.label}</p>
+                <p className="text-xs text-[#9999a8] mt-0.5">{stat.label}</p>
               </div>
             ))}
           </div>
         </section>
 
-        {/* Preferred learning mode */}
+        {/* Learning mode */}
         <section className="animate-fade-up delay-300">
-          <h2 className="text-sm font-bold text-[#5a5a68] uppercase tracking-wider mb-3">Learning mode</h2>
+          <h2 className="text-sm font-bold text-[#9999a8] uppercase tracking-wider mb-3">Learning mode</h2>
           <div className="grid grid-cols-2 gap-2">
             {modeOptions.map((m) => (
               <button
@@ -168,18 +171,18 @@ export default function ProfilePage() {
                 onClick={() => m.id !== "spatial" && setPreferredMode(m.id)}
                 disabled={m.id === "spatial"}
                 className={cn(
-                  "flex flex-col items-start gap-1 p-4 rounded-2xl border transition-all duration-200 text-left",
+                  "flex flex-col items-start gap-1.5 p-4 rounded-2xl border transition-all duration-200 text-left",
                   preferredMode === m.id
                     ? "bg-[rgba(0,229,160,0.1)] border-[rgba(0,229,160,0.35)]"
                     : "bg-[#141416] border-[rgba(255,255,255,0.07)]",
                   m.id === "spatial" && "opacity-40"
                 )}
               >
-                <span className="text-xl">{m.emoji}</span>
+                <span style={{ color: preferredMode === m.id ? "#00e5a0" : "#9999a8" }}>{m.icon}</span>
                 <span className={cn("text-sm font-semibold", preferredMode === m.id ? "text-[#00e5a0]" : "text-[#f5f5f7]")}>
                   {m.label}
                 </span>
-                <span className="text-[10px] text-[#5a5a68]">{m.desc}</span>
+                <span className="text-[10px] text-[#9999a8]">{m.desc}</span>
               </button>
             ))}
           </div>
@@ -187,7 +190,7 @@ export default function ProfilePage() {
 
         {/* Achievements */}
         <section className="animate-fade-up delay-400">
-          <h2 className="text-sm font-bold text-[#5a5a68] uppercase tracking-wider mb-3">Achievements</h2>
+          <h2 className="text-sm font-bold text-[#9999a8] uppercase tracking-wider mb-3">Achievements</h2>
           <div className="grid grid-cols-3 gap-3">
             {achievements.map((a) => (
               <div
@@ -199,8 +202,8 @@ export default function ProfilePage() {
                     : "bg-[#141416] border-[rgba(255,255,255,0.05)] opacity-40"
                 )}
               >
-                <span className="text-2xl">{a.emoji}</span>
-                <span className="text-[10px] font-semibold text-[#9999a8] leading-tight">{a.label}</span>
+                <span style={{ color: a.earned ? "#00e5a0" : "#5a5a68" }}>{a.icon}</span>
+                <span className="text-[10px] font-semibold text-[#c8c8d4] leading-tight">{a.label}</span>
               </div>
             ))}
           </div>
@@ -208,38 +211,26 @@ export default function ProfilePage() {
 
         {/* Settings */}
         <section className="animate-fade-up delay-500 space-y-2">
-          <h2 className="text-sm font-bold text-[#5a5a68] uppercase tracking-wider mb-3">Settings</h2>
-          {[
-            { label: "Notifications",      icon: "🔔", action: undefined },
-            { label: "Accessibility",      icon: "♿", action: undefined },
-            { label: "Privacy & Data",     icon: "🔒", action: undefined },
-            { label: "About Marlos",       icon: "ℹ️",  action: undefined },
-          ].map((item) => (
+          <h2 className="text-sm font-bold text-[#9999a8] uppercase tracking-wider mb-3">Settings</h2>
+          {settingsItems.map((item) => (
             <button
               key={item.label}
               className="w-full flex items-center gap-4 p-4 bg-[#141416] border border-[rgba(255,255,255,0.07)] rounded-2xl hover:bg-[#1a1a1d] transition-all active:scale-[0.98] text-left"
             >
-              <span className="text-lg">{item.icon}</span>
+              <span className="text-[#9999a8]">{item.icon}</span>
               <span className="flex-1 text-sm font-medium text-[#f5f5f7]">{item.label}</span>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" className="text-[#3a3a3f]">
-                <path d="M9 18l6-6-6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
+              <ChevronRight size={14} strokeWidth={2} color="#5a5a68" />
             </button>
           ))}
         </section>
 
         {/* Sign out */}
-        <Button
-          variant="danger"
-          fullWidth
-          onClick={signOut}
-          className="animate-fade-up delay-600"
-        >
+        <Button variant="danger" fullWidth onClick={signOut} className="animate-fade-up delay-600">
           Sign out
         </Button>
 
-        <p className="text-center text-xs text-[#3a3a3f] animate-fade-up delay-700">
-          Marlos v0.1.0 · Built with ❤️
+        <p className="text-center text-xs text-[#5a5a68] animate-fade-up delay-700">
+          Marlos v0.1.0
         </p>
       </div>
     </div>

@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect, useCallback, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
+import { BookText, Palette, Headphones, HelpCircle } from "lucide-react";
 import { BlobCharacter } from "@/components/ui/BlobCharacter";
 import { cn } from "@/lib/utils";
 
@@ -14,11 +15,11 @@ type Message = {
 
 type LearningMode = "text" | "audio" | "visual" | "quiz";
 
-const MODES: { id: LearningMode; label: string; emoji: string }[] = [
-  { id: "text",   label: "Text",   emoji: "📖" },
-  { id: "visual", label: "Visual", emoji: "🎨" },
-  { id: "audio",  label: "Audio",  emoji: "🎧" },
-  { id: "quiz",   label: "Quiz",   emoji: "❓" },
+const MODES: { id: LearningMode; label: string; icon: React.ReactNode }[] = [
+  { id: "text",   label: "Text",   icon: <BookText size={18} strokeWidth={1.8} /> },
+  { id: "visual", label: "Visual", icon: <Palette size={18} strokeWidth={1.8} /> },
+  { id: "audio",  label: "Audio",  icon: <Headphones size={18} strokeWidth={1.8} /> },
+  { id: "quiz",   label: "Quiz",   icon: <HelpCircle size={18} strokeWidth={1.8} /> },
 ];
 
 const SUGGESTIONS = [
@@ -85,9 +86,9 @@ function ChatContent() {
       // Fallback demo response
       const demos: Record<LearningMode, string> = {
         text: `Great question! Let me explain **${content}** clearly.\n\nThink of it this way: every complex idea breaks down into simpler building blocks. The key is finding the right angle that makes it click for you.\n\nWhat aspect would you like to explore deeper?`,
-        visual: `🎨 **Visual breakdown of "${content}":**\n\n📦 Core concept\n  ↓\n🔗 Connected to: A, B, C\n  ↓\n💡 Real-world application\n\nImagine drawing a map — each node connects to the next. Want me to walk through each connection?`,
-        audio: `🎧 Let me explain this conversationally, as if we're talking:\n\nSo, "${content}" — here's the thing. Most people get confused because they try to memorise it rather than understand it. The secret? Connect it to something you already know.\n\nWhat's something familiar we can compare this to?`,
-        quiz: `🧠 **Quick check on "${content}":**\n\nQ: In your own words, what do you think this means?\n\nTake a moment and type your answer — there's no wrong response here. I'll give you feedback and we'll build from there.`,
+        visual: `**Visual breakdown of "${content}":**\n\nCore concept\n  ↓\nConnected to: A, B, C\n  ↓\nReal-world application\n\nImagine drawing a map — each node connects to the next. Want me to walk through each connection?`,
+        audio: `Let me explain this conversationally, as if we're talking:\n\nSo, "${content}" — here's the thing. Most people get confused because they try to memorise it rather than understand it. The secret? Connect it to something you already know.\n\nWhat's something familiar we can compare this to?`,
+        quiz: `**Quick check on "${content}":**\n\nQ: In your own words, what do you think this means?\n\nTake a moment and type your answer — there's no wrong response here. I'll give you feedback and we'll build from there.`,
       };
       const assistantMsg: Message = {
         id: (Date.now() + 1).toString(),
@@ -115,7 +116,7 @@ function ChatContent() {
       const welcome: Message = {
         id: "welcome",
         role: "assistant",
-        content: "Hey! I'm your Marlos tutor 👋 What would you like to explore today? Ask me anything — I'll adapt to how you learn best.",
+        content: "Hey! I'm your Marlos tutor. What would you like to explore today? Ask me anything — I'll adapt to how you learn best.",
         timestamp: new Date(),
       };
       setTimeout(() => setMessages([welcome]), 400);
@@ -170,7 +171,7 @@ function ChatContent() {
                 : "bg-[#141416] text-[#5a5a68] border border-[rgba(255,255,255,0.06)] hover:text-[#9999a8]"
             )}
           >
-            <span>{m.emoji}</span>
+            <span className="flex items-center justify-center" style={{ width: 18, height: 18 }}>{m.icon}</span>
             <span>{m.label}</span>
           </button>
         ))}
@@ -261,7 +262,7 @@ function ChatContent() {
               onKeyDown={handleKeyDown}
               placeholder="Ask me anything…"
               rows={1}
-              className="w-full resize-none rounded-2xl bg-[#1a1a1d] border border-[rgba(255,255,255,0.08)] text-[#f5f5f7] placeholder:text-[#3a3a3f] text-sm px-4 py-3 focus:outline-none focus:border-[rgba(0,229,160,0.4)] transition-all overflow-hidden"
+              className="w-full resize-none rounded-2xl bg-[#1a1a1d] border border-[rgba(255,255,255,0.08)] text-[#f5f5f7] placeholder:text-[#7a7a90] text-sm px-4 py-3 focus:outline-none focus:border-[rgba(0,229,160,0.4)] transition-all overflow-hidden"
               style={{ minHeight: 48, lineHeight: "1.5" }}
             />
           </div>

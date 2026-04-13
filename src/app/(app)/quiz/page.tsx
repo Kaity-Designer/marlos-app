@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { Zap, Hash, Globe, Monitor, CircleDot, Brain, Clock, Lightbulb } from "lucide-react";
 import { BlobCharacter } from "@/components/ui/BlobCharacter";
 import { Button } from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
@@ -12,7 +13,7 @@ type Question = {
   options: string[];
   correct: number;
   explanation: string;
-  emoji: string;
+  icon: React.ReactNode;
 };
 
 const questions: Question[] = [
@@ -22,7 +23,7 @@ const questions: Question[] = [
     options: ["Nucleus", "Mitochondria", "Ribosome", "Cell membrane"],
     correct: 1,
     explanation: "The mitochondria produces ATP (energy) for the cell through cellular respiration. That's why it's nicknamed the 'powerhouse'!",
-    emoji: "⚡",
+    icon: <Zap size={28} strokeWidth={1.8} />,
   },
   {
     id: 2,
@@ -30,7 +31,7 @@ const questions: Question[] = [
     options: ["144", "156", "148", "162"],
     correct: 1,
     explanation: "12 × 13 = 12 × 10 + 12 × 3 = 120 + 36 = 156. Breaking multiplication into parts makes it easier!",
-    emoji: "🔢",
+    icon: <Hash size={28} strokeWidth={1.8} />,
   },
   {
     id: 3,
@@ -38,7 +39,7 @@ const questions: Question[] = [
     options: ["1943", "1944", "1945", "1946"],
     correct: 2,
     explanation: "WWII ended in 1945 — V-E Day (Victory in Europe) was May 8th, and V-J Day (Victory over Japan) was September 2nd.",
-    emoji: "🌍",
+    icon: <Globe size={28} strokeWidth={1.8} />,
   },
   {
     id: 4,
@@ -51,7 +52,7 @@ const questions: Question[] = [
     ],
     correct: 0,
     explanation: "HTML = HyperText Markup Language. It's the standard language used to create web pages.",
-    emoji: "💻",
+    icon: <Monitor size={28} strokeWidth={1.8} />,
   },
   {
     id: 5,
@@ -59,7 +60,7 @@ const questions: Question[] = [
     options: ["Venus", "Earth", "Mercury", "Mars"],
     correct: 2,
     explanation: "Mercury is the closest planet to the Sun, sitting at an average distance of about 58 million km.",
-    emoji: "🪐",
+    icon: <CircleDot size={28} strokeWidth={1.8} />,
   },
 ];
 
@@ -113,7 +114,8 @@ export default function QuizPage() {
               className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-semibold uppercase tracking-wider"
               style={{ background: "rgba(168,85,247,0.15)", color: "#a855f7", border: "1px solid rgba(168,85,247,0.25)" }}
             >
-              🧠 Daily Challenge
+              <Brain size={14} strokeWidth={2} />
+              <span>Daily Challenge</span>
             </div>
             <h1 className="text-3xl font-bold text-[#f5f5f7]" style={{ letterSpacing: "-0.03em" }}>
               Today&apos;s Quiz
@@ -125,13 +127,13 @@ export default function QuizPage() {
 
           <div className="w-full bg-[#141416] border border-[rgba(255,255,255,0.07)] rounded-3xl p-5 space-y-4">
             {[
-              { icon: "❓", label: "5 questions" },
-              { icon: "⏱", label: "~3 minutes" },
-              { icon: "⚡", label: "+50 XP on completion" },
-              { icon: "💡", label: "Explanations after each answer" },
+              { icon: <HelpCircle size={20} strokeWidth={1.8} color="#9999a8" />, label: "5 questions" },
+              { icon: <Clock size={20} strokeWidth={1.8} color="#9999a8" />, label: "~3 minutes" },
+              { icon: <Zap size={20} strokeWidth={1.8} color="#9999a8" />, label: "+50 XP on completion" },
+              { icon: <Lightbulb size={20} strokeWidth={1.8} color="#9999a8" />, label: "Explanations after each answer" },
             ].map((item) => (
               <div key={item.label} className="flex items-center gap-3">
-                <span className="text-lg">{item.icon}</span>
+                {item.icon}
                 <span className="text-sm text-[#9999a8]">{item.label}</span>
               </div>
             ))}
@@ -149,10 +151,10 @@ export default function QuizPage() {
   if (phase === "complete") {
     const feedback =
       percentage >= 80
-        ? { msg: "Excellent work! 🎉", mood: "excited" as const, color: "#00e5a0" }
+        ? { msg: "Excellent work!", mood: "excited" as const, color: "#00e5a0" }
         : percentage >= 60
-        ? { msg: "Good effort! 👍", mood: "happy" as const, color: "#4d9fff" }
-        : { msg: "Keep practising! 💪", mood: "neutral" as const, color: "#f5a623" };
+        ? { msg: "Good effort!", mood: "happy" as const, color: "#4d9fff" }
+        : { msg: "Keep practising!", mood: "neutral" as const, color: "#f5a623" };
 
     return (
       <div className="flex flex-col items-center justify-center min-h-full px-6 gap-8">
@@ -188,7 +190,7 @@ export default function QuizPage() {
             className="flex items-center gap-3 px-6 py-4 rounded-2xl"
             style={{ background: "rgba(0,229,160,0.08)", border: "1px solid rgba(0,229,160,0.2)" }}
           >
-            <span className="text-2xl">⚡</span>
+            <Zap size={24} color="#00e5a0" strokeWidth={1.8} />
             <div>
               <p className="text-[#00e5a0] font-bold text-lg">+{score * 10} XP earned</p>
               <p className="text-xs text-[#5a5a68]">Keep streaks going for bonus XP!</p>
@@ -238,7 +240,9 @@ export default function QuizPage() {
         <div className="flex flex-col items-center gap-4 animate-fade-up">
           <BlobCharacter size={60} mood={blobMood} animated />
           <div className="text-center space-y-2">
-            <span className="text-3xl">{q.emoji}</span>
+            <div className="w-12 h-12 rounded-2xl bg-[#1a1a1d] flex items-center justify-center text-[#9999a8] mx-auto">
+              {q.icon}
+            </div>
             <h2
               className="text-xl font-bold text-[#f5f5f7] leading-snug"
               style={{ letterSpacing: "-0.02em" }}

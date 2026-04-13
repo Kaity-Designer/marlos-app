@@ -2,19 +2,20 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { Hash, HeartPulse, Globe, Code2, PenLine, FlaskConical, Landmark, Languages, Search } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const categories = ["All", "Maths", "Science", "History", "English", "Coding", "Languages"];
 
 const courses = [
-  { id: "1", title: "Introduction to Algebra", subject: "Maths", emoji: "🔢", progress: 35, lessons: 12, color: "from-[#00e5a0]/20 to-[#00a872]/20", accent: "#00e5a0", difficulty: "Beginner" },
-  { id: "2", title: "The Human Body", subject: "Science", emoji: "🫀", progress: 60, lessons: 8, color: "from-[#4d9fff]/20 to-[#007ae5]/20", accent: "#4d9fff", difficulty: "Intermediate" },
-  { id: "3", title: "World War II", subject: "History", emoji: "🌍", progress: 10, lessons: 15, color: "from-[#f5a623]/20 to-[#e07b00]/20", accent: "#f5a623", difficulty: "Intermediate" },
-  { id: "4", title: "Python Fundamentals", subject: "Coding", emoji: "🐍", progress: 0, lessons: 20, color: "from-[#a855f7]/20 to-[#7c3aed]/20", accent: "#a855f7", difficulty: "Beginner" },
-  { id: "5", title: "Shakespeare & Poetry", subject: "English", emoji: "📝", progress: 80, lessons: 10, color: "from-[#f43f5e]/20 to-[#e11d48]/20", accent: "#f43f5e", difficulty: "Advanced" },
-  { id: "6", title: "Cell Biology", subject: "Science", emoji: "🔬", progress: 25, lessons: 14, color: "from-[#00e5a0]/20 to-[#4d9fff]/20", accent: "#00e5a0", difficulty: "Intermediate" },
-  { id: "7", title: "Ancient Rome", subject: "History", emoji: "🏛️", progress: 0, lessons: 11, color: "from-[#f5a623]/20 to-[#f43f5e]/20", accent: "#f5a623", difficulty: "Beginner" },
-  { id: "8", title: "Conversational Spanish", subject: "Languages", emoji: "🇪🇸", progress: 45, lessons: 18, color: "from-[#ef4444]/20 to-[#f97316]/20", accent: "#ef4444", difficulty: "Beginner" },
+  { id: "1", title: "Introduction to Algebra", subject: "Maths", icon: <Hash size={28} strokeWidth={1.5} />, progress: 35, lessons: 12, color: "from-[#00e5a0]/20 to-[#00a872]/20", accent: "#00e5a0", difficulty: "Beginner" },
+  { id: "2", title: "The Human Body", subject: "Science", icon: <HeartPulse size={28} strokeWidth={1.5} />, progress: 60, lessons: 8, color: "from-[#4d9fff]/20 to-[#007ae5]/20", accent: "#4d9fff", difficulty: "Intermediate" },
+  { id: "3", title: "World War II", subject: "History", icon: <Globe size={28} strokeWidth={1.5} />, progress: 10, lessons: 15, color: "from-[#f5a623]/20 to-[#e07b00]/20", accent: "#f5a623", difficulty: "Intermediate" },
+  { id: "4", title: "Python Fundamentals", subject: "Coding", icon: <Code2 size={28} strokeWidth={1.5} />, progress: 0, lessons: 20, color: "from-[#a855f7]/20 to-[#7c3aed]/20", accent: "#a855f7", difficulty: "Beginner" },
+  { id: "5", title: "Shakespeare & Poetry", subject: "English", icon: <PenLine size={28} strokeWidth={1.5} />, progress: 80, lessons: 10, color: "from-[#f43f5e]/20 to-[#e11d48]/20", accent: "#f43f5e", difficulty: "Advanced" },
+  { id: "6", title: "Cell Biology", subject: "Science", icon: <FlaskConical size={28} strokeWidth={1.5} />, progress: 25, lessons: 14, color: "from-[#00e5a0]/20 to-[#4d9fff]/20", accent: "#00e5a0", difficulty: "Intermediate" },
+  { id: "7", title: "Ancient Rome", subject: "History", icon: <Landmark size={28} strokeWidth={1.5} />, progress: 0, lessons: 11, color: "from-[#f5a623]/20 to-[#f43f5e]/20", accent: "#f5a623", difficulty: "Beginner" },
+  { id: "8", title: "Conversational Spanish", subject: "Languages", icon: <Languages size={28} strokeWidth={1.5} />, progress: 45, lessons: 18, color: "from-[#ef4444]/20 to-[#f97316]/20", accent: "#ef4444", difficulty: "Beginner" },
 ];
 
 export default function LibraryPage() {
@@ -53,7 +54,7 @@ export default function LibraryPage() {
             placeholder="Search courses…"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full h-12 bg-[#141416] border border-[rgba(255,255,255,0.07)] rounded-2xl pl-11 pr-4 text-sm text-[#f5f5f7] placeholder:text-[#3a3a3f] focus:outline-none focus:border-[rgba(0,229,160,0.4)] transition-all"
+            className="w-full h-12 bg-[#141416] border border-[rgba(255,255,255,0.07)] rounded-2xl pl-11 pr-4 text-sm text-[#f5f5f7] placeholder:text-[#7a7a90] focus:outline-none focus:border-[rgba(0,229,160,0.4)] transition-all"
           />
         </div>
       </div>
@@ -68,7 +69,7 @@ export default function LibraryPage() {
               "flex-shrink-0 px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-200",
               activeCategory === cat
                 ? "bg-[#00e5a0] text-[#0f0f10] shadow-[0_0_16px_rgba(0,229,160,0.2)]"
-                : "bg-[#141416] text-[#5a5a68] border border-[rgba(255,255,255,0.07)] hover:text-[#9999a8]"
+                : "bg-[#141416] text-[#9999a8] border border-[rgba(255,255,255,0.07)] hover:text-[#f5f5f7]"
             )}
           >
             {cat}
@@ -87,11 +88,11 @@ export default function LibraryPage() {
               style={{ animationDelay: `${i * 60 + 200}ms` }}
             >
               <div className="bg-[#141416] border border-[rgba(255,255,255,0.07)] rounded-3xl p-4 flex gap-4 hover-lift">
-                {/* Emoji icon */}
+                {/* Icon */}
                 <div
-                  className={cn("w-16 h-16 rounded-2xl flex items-center justify-center text-3xl flex-shrink-0 bg-gradient-to-br", course.color)}
+                  className={cn("w-16 h-16 rounded-2xl flex items-center justify-center flex-shrink-0 bg-gradient-to-br", course.color)}
                 >
-                  {course.emoji}
+                  {course.icon}
                 </div>
 
                 <div className="flex-1 min-w-0 space-y-2">
@@ -138,7 +139,7 @@ export default function LibraryPage() {
 
           {filtered.length === 0 && (
             <div className="flex flex-col items-center gap-3 py-16 text-center animate-fade-in">
-              <span className="text-5xl">🔍</span>
+              <Search size={40} strokeWidth={1.5} color="#5a5a68" />
               <p className="text-[#5a5a68] text-sm">No courses found</p>
               <button
                 onClick={() => { setSearch(""); setActiveCategory("All"); }}
