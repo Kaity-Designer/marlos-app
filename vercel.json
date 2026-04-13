@@ -1,0 +1,11 @@
+{
+  "buildCommand": "npm run build",
+  "outputDirectory": ".next",
+  "framework": "nextjs",
+  "regions": ["lhr1"],
+  "env": {
+    "NEXT_PUBLIC_SUPABASE_URL": "@marlos-supabase-url",
+    "NEXT_PUBLIC_SUPABASE_ANON_KEY": "@marlos-supabase-anon-key",
+    "ANTHROPIC_API_KEY": "@marlos-anthropic-key"
+  }
+}
