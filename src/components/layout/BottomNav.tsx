@@ -2,64 +2,15 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, MessageCircle, Grid2x2, User } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { Home, Library, MessageCircle, ClipboardCheck, User } from "lucide-react";
+import { motion } from "framer-motion";
 
-type NavItem = {
-  href: string;
-  label: string;
-  icon: (active: boolean) => React.ReactNode;
-};
-
-const navItems: NavItem[] = [
-  {
-    href: "/home",
-    label: "Home",
-    icon: (active) => (
-      <Home
-        size={22}
-        strokeWidth={active ? 2.2 : 1.8}
-        color={active ? "#00e5a0" : "#7a7a8a"}
-        fill={active ? "rgba(0,229,160,0.12)" : "none"}
-      />
-    ),
-  },
-  {
-    href: "/chat",
-    label: "Tutor",
-    icon: (active) => (
-      <MessageCircle
-        size={22}
-        strokeWidth={active ? 2.2 : 1.8}
-        color={active ? "#00e5a0" : "#7a7a8a"}
-        fill={active ? "rgba(0,229,160,0.12)" : "none"}
-      />
-    ),
-  },
-  {
-    href: "/library",
-    label: "Library",
-    icon: (active) => (
-      <Grid2x2
-        size={22}
-        strokeWidth={active ? 2.2 : 1.8}
-        color={active ? "#00e5a0" : "#7a7a8a"}
-        fill={active ? "rgba(0,229,160,0.12)" : "none"}
-      />
-    ),
-  },
-  {
-    href: "/profile",
-    label: "Profile",
-    icon: (active) => (
-      <User
-        size={22}
-        strokeWidth={active ? 2.2 : 1.8}
-        color={active ? "#00e5a0" : "#7a7a8a"}
-        fill={active ? "rgba(0,229,160,0.12)" : "none"}
-      />
-    ),
-  },
+const navItems = [
+  { href: "/home",    label: "Home",    icon: Home,          center: false },
+  { href: "/library", label: "Library", icon: Library,       center: false },
+  { href: "/chat",    label: "Marlos",  icon: MessageCircle, center: true  },
+  { href: "/quiz",    label: "Tests",   icon: ClipboardCheck, center: false },
+  { href: "/profile", label: "Profile", icon: User,          center: false },
 ];
 
 export function BottomNav() {
@@ -67,37 +18,55 @@ export function BottomNav() {
 
   return (
     <nav className="bottom-nav">
-      <div className="flex items-center justify-around h-16">
-        {navItems.map((item) => {
-          const active = pathname === item.href || pathname.startsWith(item.href + "/");
-          return (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={cn(
-                "flex flex-col items-center gap-1 px-4 py-2 rounded-2xl",
-                "transition-all duration-200 active:scale-90",
-                "relative"
-              )}
-              style={{ transitionTimingFunction: "cubic-bezier(0.16,1,0.3,1)" }}
-            >
-              {/* Active indicator pill */}
-              {active && (
+      <div
+        className="backdrop-blur-xl rounded-[40px] px-4 py-3 shadow-2xl border border-white/5 mx-4 mb-2"
+        style={{ backgroundColor: "rgba(45,45,45,0.95)" }}
+      >
+        <div className="flex items-end justify-between">
+          {navItems.map(item => {
+            const active = pathname === item.href || pathname.startsWith(item.href + "/");
+            const Icon = item.icon;
+
+            if (item.center) {
+              return (
+                <Link key={item.href} href={item.href} className="flex flex-col items-center gap-1.5 flex-1">
+                  <motion.div
+                    whileTap={{ scale: 0.9 }}
+                    className="w-16 h-16 rounded-full flex items-center justify-center -mt-5 shadow-lg"
+                    style={{
+                      background: "linear-gradient(135deg, #00ce93, #00a076)",
+                      boxShadow: "0 4px 20px rgba(0,206,147,0.4)",
+                    }}
+                  >
+                    <Icon className="w-7 h-7 text-white" />
+                  </motion.div>
+                  <span className="text-[10px] text-[#00ce93]">{item.label}</span>
+                </Link>
+              );
+            }
+
+            return (
+              <Link key={item.href} href={item.href} className="flex flex-col items-center gap-1.5 flex-1">
+                <motion.div
+                  whileTap={{ scale: 0.9 }}
+                  className="w-12 h-12 rounded-full flex items-center justify-center transition-all"
+                  style={{ backgroundColor: active ? "rgba(0,206,147,0.2)" : "transparent" }}
+                >
+                  <Icon
+                    className="w-5 h-5"
+                    style={{ color: active ? "white" : "rgba(255,255,255,0.5)" }}
+                  />
+                </motion.div>
                 <span
-                  className="absolute -top-0.5 w-1 h-1 rounded-full bg-[#00e5a0]"
-                  style={{ boxShadow: "0 0 6px rgba(0,229,160,0.8)" }}
-                />
-              )}
-              {item.icon(active)}
-              <span className={cn(
-                "text-[10px] font-medium transition-colors duration-200",
-                active ? "text-[#00e5a0]" : "text-[#7a7a8a]"
-              )}>
-                {item.label}
-              </span>
-            </Link>
-          );
-        })}
+                  className="text-[10px]"
+                  style={{ color: active ? "#00ce93" : "rgba(255,255,255,0.5)" }}
+                >
+                  {item.label}
+                </span>
+              </Link>
+            );
+          })}
+        </div>
       </div>
     </nav>
   );
