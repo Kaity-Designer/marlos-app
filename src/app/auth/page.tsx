@@ -95,8 +95,8 @@ export default function AuthPage() {
             className={cn(
               "flex-1 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200",
               mode === m
-                ? "bg-[#00e5a0] text-[#0f0f10] shadow-[0_0_16px_rgba(0,229,160,0.25)]"
-                : "text-[#7a7a88] hover:text-[#9999a8]"
+                ? "bg-[#00e5a0] text-[#0a0a0a] shadow-[0_0_16px_rgba(0,229,160,0.25)]"
+                : "text-[#9999a8] hover:text-[#c8c8d4]"
             )}
           >
             {m === "signup" ? "Sign up" : "Sign in"}

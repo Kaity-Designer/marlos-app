@@ -15,13 +15,13 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
     return (
       <div className="flex flex-col gap-1.5 w-full">
         {label && (
-          <label className="text-sm font-medium text-[#9999a8] px-1">
+          <label className="text-sm font-semibold text-[#c8c8d4] px-1">
             {label}
           </label>
         )}
         <div className="relative flex items-center">
           {icon && (
-            <span className="absolute left-4 text-[#5a5a68] pointer-events-none">
+            <span className="absolute left-4 text-[#7a7a90] pointer-events-none">
               {icon}
             </span>
           )}
@@ -30,7 +30,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             className={cn(
               "w-full h-14 rounded-2xl",
               "bg-[#1a1a1d] border border-[rgba(255,255,255,0.07)]",
-              "text-[#f5f5f7] placeholder:text-[#5a5a68]",
+              "text-[#f5f5f7] placeholder:text-[#7a7a90]",
               "text-base font-medium",
               "transition-all duration-200",
               "focus:outline-none focus:border-[rgba(0,229,160,0.5)] focus:bg-[#1f1f22]",
@@ -43,7 +43,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             {...props}
           />
           {trailing && (
-            <span className="absolute right-4 text-[#5a5a68]">{trailing}</span>
+            <span className="absolute right-4 text-[#9999a8]">{trailing}</span>
           )}
         </div>
         {error && (

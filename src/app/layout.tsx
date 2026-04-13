@@ -32,17 +32,6 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  // iPhone 15 Pro logical dimensions
-  // Screen: 393 × 852 pts. Frame adds ~22px each side + 14px top/bottom bezel
-  const SCREEN_W = 393;
-  const SCREEN_H = 852;
-  const BEZEL_H = 14;   // top/bottom bezel
-  const BEZEL_SIDE = 22; // left/right bezel
-  const CORNER_OUTER = 54;
-  const CORNER_INNER = 44;
-  const PHONE_W = SCREEN_W + BEZEL_SIDE * 2;   // 437
-  const PHONE_H = SCREEN_H + BEZEL_H * 2;      // 880
-
   return (
     <html lang="en">
       <head>
@@ -51,24 +40,59 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <link rel="icon" href="/favicon.ico" />
         <style>{`
-          /* Mobile phones: show real app full screen */
+          /* ── Mobile phones: full screen app ── */
           @media (max-width: 768px) {
             #desktop-shell { display: none !important; }
             #app-root { display: block !important; }
           }
-          /* Desktop / iPad: show the mockup shell */
+
+          /* ── Desktop / iPad: show gradient + phone ── */
           @media (min-width: 769px) {
-            html, body { margin: 0; padding: 0; overflow: hidden; width: 100%; height: 100%; }
+            html, body {
+              margin: 0; padding: 0;
+              width: 100%; height: 100%;
+              overflow: hidden;
+              background: #00c47a;
+            }
             #app-root { display: none !important; }
-            #desktop-shell { display: flex !important; }
+            #desktop-shell {
+              display: flex !important;
+              width: 100vw;
+              height: 100vh;
+              align-items: center;
+              justify-content: center;
+              position: relative;
+              overflow: hidden;
+            }
           }
-          /* The iframe inside the phone must behave like a real phone screen */
-          #phone-iframe {
-            width: ${SCREEN_W}px;
-            height: ${SCREEN_H}px;
-            border: none;
-            display: block;
-            border-radius: ${CORNER_INNER}px;
+
+          /* Scale phone to always fit viewport with 48px vertical padding */
+          .phone-scaler {
+            /* fallback: no scale */
+            transform-origin: center center;
+          }
+
+          @media (min-height: 980px) {
+            .phone-scaler { transform: scale(1); }
+          }
+          @media (max-height: 979px) and (min-height: 880px) {
+            .phone-scaler { transform: scale(0.92); }
+          }
+          @media (max-height: 879px) and (min-height: 800px) {
+            .phone-scaler { transform: scale(0.84); }
+          }
+          @media (max-height: 799px) and (min-height: 720px) {
+            .phone-scaler { transform: scale(0.76); }
+          }
+          @media (max-height: 719px) {
+            .phone-scaler { transform: scale(0.68); }
+          }
+
+          /* Gradient background — brand green top to soft mint bottom */
+          .desktop-bg {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, #00c47a 0%, #00d990 35%, #00e5a0 60%, #7de8bc 85%, #b8f2d8 100%);
           }
         `}</style>
       </head>
@@ -77,146 +101,100 @@ export default function RootLayout({
         <div id="app-root">{children}</div>
 
         {/* ── Desktop / iPad: gradient bg + phone mockup ── */}
-        <div
-          id="desktop-shell"
-          style={{
-            display: "none",
-            width: "100vw",
-            height: "100vh",
-            alignItems: "center",
-            justifyContent: "center",
-            position: "relative",
-            overflow: "hidden",
-            background: "#0a0a0f",
-          }}
-        >
-          {/* ── Background gradient blobs ── */}
-          <div style={{
-            position: "absolute",
-            inset: 0,
-            background: `
-              radial-gradient(ellipse 55% 65% at 8% 90%, rgba(155, 30, 110, 0.80) 0%, transparent 58%),
-              radial-gradient(ellipse 50% 60% at 88% 15%, rgba(90, 65, 210, 0.75) 0%, transparent 58%),
-              radial-gradient(ellipse 45% 55% at 92% 82%, rgba(160, 160, 220, 0.40) 0%, transparent 52%),
-              radial-gradient(ellipse 35% 45% at 50% 50%, rgba(70, 50, 150, 0.25) 0%, transparent 70%)
-            `,
-          }} />
+        <div id="desktop-shell">
+          {/* Background gradient */}
+          <div className="desktop-bg" />
 
-          {/* ── Phone frame — scales to fit viewport height with padding ── */}
-          <div style={{
-            position: "relative",
-            zIndex: 10,
-            /* Scale the whole phone so it always fits on screen with 40px padding */
-            transform: `scale(min(1, calc((100vh - 80px) / ${PHONE_H}px)))`,
-            transformOrigin: "center center",
-            /* Make sure the scaled container doesn't take up extra space */
-            width: `${PHONE_W}px`,
-            height: `${PHONE_H}px`,
-            flexShrink: 0,
-          }}>
-            {/* Outer drop-shadow wrapper */}
+          {/* Phone mockup — 390×844 (iPhone 14/15 logical size, perfectly proportioned) */}
+          <div className="phone-scaler" style={{ position: "relative", zIndex: 10, flexShrink: 0 }}>
+            {/* Glow behind the phone */}
             <div style={{
-              width: `${PHONE_W}px`,
-              height: `${PHONE_H}px`,
-              filter: `
-                drop-shadow(0 48px 96px rgba(0,0,0,0.70))
-                drop-shadow(0 0 80px rgba(110, 80, 220, 0.35))
+              position: "absolute",
+              inset: "-40px",
+              borderRadius: "80px",
+              background: "radial-gradient(ellipse at 50% 60%, rgba(0,80,40,0.25) 0%, transparent 70%)",
+              filter: "blur(24px)",
+              zIndex: 0,
+            }} />
+
+            {/* Phone outer body — 390+44 wide = 434, 844+28 tall = 872 */}
+            <div style={{
+              position: "relative",
+              zIndex: 1,
+              width: "434px",
+              height: "872px",
+              borderRadius: "52px",
+              background: "linear-gradient(160deg, #323238 0%, #1e1e24 30%, #111116 100%)",
+              boxShadow: `
+                0 0 0 1.5px rgba(255,255,255,0.14),
+                0 1px 0 0 rgba(255,255,255,0.24) inset,
+                0 -1px 0 0 rgba(0,0,0,0.5) inset,
+                0 50px 100px rgba(0,0,0,0.75),
+                0 20px 40px rgba(0,0,0,0.5)
               `,
             }}>
-              {/* ── Phone body ── */}
+
+              {/* Left buttons */}
+              {/* Silent switch */}
+              <div style={{ position:"absolute", left:"-4px", top:"108px", width:"4px", height:"32px", background:"#2a2a30", borderRadius:"3px 0 0 3px", boxShadow:"0 0 0 0.5px rgba(255,255,255,0.07)" }} />
+              {/* Vol up */}
+              <div style={{ position:"absolute", left:"-4px", top:"168px", width:"4px", height:"66px", background:"#2a2a30", borderRadius:"3px 0 0 3px", boxShadow:"0 0 0 0.5px rgba(255,255,255,0.07)" }} />
+              {/* Vol down */}
+              <div style={{ position:"absolute", left:"-4px", top:"246px", width:"4px", height:"66px", background:"#2a2a30", borderRadius:"3px 0 0 3px", boxShadow:"0 0 0 0.5px rgba(255,255,255,0.07)" }} />
+              {/* Power */}
+              <div style={{ position:"absolute", right:"-4px", top:"196px", width:"4px", height:"88px", background:"#2a2a30", borderRadius:"0 3px 3px 0", boxShadow:"0 0 0 0.5px rgba(255,255,255,0.07)" }} />
+
+              {/* Screen — inset 14px each side, 14px top/bottom */}
               <div style={{
-                width: `${PHONE_W}px`,
-                height: `${PHONE_H}px`,
-                borderRadius: `${CORNER_OUTER}px`,
-                background: "linear-gradient(160deg, #2e2e34 0%, #1c1c22 35%, #111116 100%)",
-                boxShadow: `
-                  inset 0 0 0 1.5px rgba(255,255,255,0.13),
-                  inset 0 1px 0 rgba(255,255,255,0.22),
-                  inset 0 -1px 0 rgba(0,0,0,0.4),
-                  0 0 0 1px rgba(0,0,0,0.6)
-                `,
-                position: "relative",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
+                position: "absolute",
+                top: "14px",
+                left: "14px",
+                right: "14px",
+                bottom: "14px",
+                borderRadius: "40px",
+                overflow: "hidden",
+                background: "#000",
               }}>
-                {/* Left buttons: silent + vol up + vol down */}
-                {[
-                  { top: 112, h: 34 },   // silent switch
-                  { top: 178, h: 68 },   // vol up
-                  { top: 258, h: 68 },   // vol down
-                ].map((b, i) => (
-                  <div key={i} style={{
-                    position: "absolute",
-                    left: -4,
-                    top: b.top,
-                    width: 4,
-                    height: b.h,
-                    background: "linear-gradient(90deg, #1a1a20, #2a2a30)",
-                    borderRadius: "3px 0 0 3px",
-                    boxShadow: "inset 0 1px 0 rgba(255,255,255,0.08)",
-                  }} />
-                ))}
-                {/* Right button: power */}
+                {/* Screen glare overlay — sits above iframe, pointer-events none */}
                 <div style={{
                   position: "absolute",
-                  right: -4,
-                  top: 200,
-                  width: 4,
-                  height: 90,
-                  background: "linear-gradient(270deg, #1a1a20, #2a2a30)",
-                  borderRadius: "0 3px 3px 0",
-                  boxShadow: "inset 0 1px 0 rgba(255,255,255,0.08)",
+                  inset: 0,
+                  borderRadius: "40px",
+                  background: "linear-gradient(135deg, rgba(255,255,255,0.05) 0%, transparent 35%)",
+                  zIndex: 20,
+                  pointerEvents: "none",
                 }} />
 
-                {/* ── Screen area ── */}
+                {/* Dynamic Island */}
                 <div style={{
-                  width: `${SCREEN_W}px`,
-                  height: `${SCREEN_H}px`,
-                  borderRadius: `${CORNER_INNER}px`,
-                  overflow: "hidden",
-                  position: "relative",
+                  position: "absolute",
+                  top: "13px",
+                  left: "50%",
+                  transform: "translateX(-50%)",
+                  width: "118px",
+                  height: "34px",
                   background: "#000",
-                  boxShadow: "inset 0 0 0 1px rgba(0,0,0,0.8)",
-                }}>
-                  {/* Subtle screen glare */}
-                  <div style={{
-                    position: "absolute",
-                    inset: 0,
-                    borderRadius: `${CORNER_INNER}px`,
-                    background: "linear-gradient(135deg, rgba(255,255,255,0.04) 0%, transparent 40%)",
-                    zIndex: 20,
-                    pointerEvents: "none",
-                  }} />
+                  borderRadius: "20px",
+                  zIndex: 30,
+                  pointerEvents: "none",
+                }} />
 
-                  {/* Dynamic Island */}
-                  <div style={{
+                {/* Live interactive iframe — exact iPhone screen dimensions */}
+                <iframe
+                  src="/auth"
+                  title="Marlos App"
+                  sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-top-navigation"
+                  style={{
                     position: "absolute",
-                    top: 12,
-                    left: "50%",
-                    transform: "translateX(-50%)",
-                    width: 120,
-                    height: 34,
-                    background: "#000",
-                    borderRadius: 20,
-                    zIndex: 30,
-                    boxShadow: "0 0 0 1px rgba(255,255,255,0.06)",
-                  }} />
-
-                  {/* ── Live app iframe ── */}
-                  <iframe
-                    id="phone-iframe"
-                    src="/auth"
-                    title="Marlos App"
-                    sandbox="allow-same-origin allow-scripts allow-forms allow-popups"
-                    style={{
-                      width: `${SCREEN_W}px`,
-                      height: `${SCREEN_H}px`,
-                      border: "none",
-                      display: "block",
-                    }}
-                  />
-                </div>
+                    top: 0,
+                    left: 0,
+                    width: "406px",   /* screen area = 434 - 14 - 14 */
+                    height: "844px",  /* screen area = 872 - 14 - 14 */
+                    border: "none",
+                    display: "block",
+                    borderRadius: "40px",
+                  }}
+                />
               </div>
             </div>
           </div>
