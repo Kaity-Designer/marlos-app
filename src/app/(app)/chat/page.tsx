@@ -168,7 +168,7 @@ function ChatContent() {
               "flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all duration-200",
               mode === m.id
                 ? "bg-[rgba(0,229,160,0.15)] text-[#00e5a0] border border-[rgba(0,229,160,0.3)]"
-                : "bg-[#141416] text-[#5a5a68] border border-[rgba(255,255,255,0.06)] hover:text-[#9999a8]"
+                : "bg-[#141416] text-[#9999a8] border border-[rgba(255,255,255,0.06)] hover:text-[#f5f5f7]"
             )}
           >
             <span className="flex items-center justify-center" style={{ width: 18, height: 18 }}>{m.icon}</span>

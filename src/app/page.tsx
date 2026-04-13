@@ -56,7 +56,7 @@ export default function SplashPage() {
           >
             marlos
           </h1>
-          <p className="text-[#5a5a68] text-xs font-semibold tracking-[0.2em] uppercase">
+          <p className="text-[#9999a8] text-xs font-semibold tracking-[0.2em] uppercase">
             Learn your way
           </p>
         </div>

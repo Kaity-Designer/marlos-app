@@ -73,7 +73,7 @@ function getUserData() {
 }
 
 export default function HomePage() {
-  const [name] = useState(() => (typeof window !== "undefined" ? getUserData().name : "Learner"));
+  const [name] = useState(() => (typeof window \!== "undefined" ? getUserData().name : "Learner"));
   const [greeting] = useState(() => getGreeting());
   const [xp] = useState(420);
   const [streak] = useState(5);

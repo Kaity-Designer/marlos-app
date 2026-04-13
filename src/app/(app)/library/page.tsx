@@ -68,7 +68,7 @@ export default function LibraryPage() {
             className={cn(
               "flex-shrink-0 px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-200",
               activeCategory === cat
-                ? "bg-[#00e5a0] text-[#0f0f10] shadow-[0_0_16px_rgba(0,229,160,0.2)]"
+                ? "toggle-active shadow-[0_0_16px_rgba(0,229,160,0.2)]"
                 : "bg-[#141416] text-[#9999a8] border border-[rgba(255,255,255,0.07)] hover:text-[#f5f5f7]"
             )}
           >

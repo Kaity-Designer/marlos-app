@@ -15,7 +15,7 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 const variantStyles: Record<Variant, string> = {
   primary:
-    "bg-[#00e5a0] !text-[#050505] font-bold hover:bg-[#00f5b0] active:bg-[#00c98c] shadow-[0_0_24px_rgba(0,229,160,0.25)] hover:shadow-[0_0_32px_rgba(0,229,160,0.35)]",
+    "btn-primary font-bold shadow-[0_0_24px_rgba(0,229,160,0.25)] hover:shadow-[0_0_32px_rgba(0,229,160,0.35)]",
   secondary:
     "bg-[#1a1a1d] text-[#f5f5f7] border border-[rgba(255,255,255,0.08)] hover:bg-[#212124] hover:border-[rgba(255,255,255,0.12)]",
   ghost:
@@ -51,6 +51,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       <button
         ref={ref}
         disabled={disabled || loading}
+        data-variant={variant}
         className={cn(
           // Base
           "inline-flex items-center justify-center gap-2",
@@ -65,7 +66,6 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         )}
         style={{
           transitionTimingFunction: "cubic-bezier(0.16,1,0.3,1)",
-          ...(variant === "primary" && { color: "#050505" }),
         }}
         {...props}
       >

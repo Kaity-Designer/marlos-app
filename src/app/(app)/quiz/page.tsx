@@ -22,7 +22,7 @@ const questions: Question[] = [
     question: "What is the powerhouse of the cell?",
     options: ["Nucleus", "Mitochondria", "Ribosome", "Cell membrane"],
     correct: 1,
-    explanation: "The mitochondria produces ATP (energy) for the cell through cellular respiration. That's why it's nicknamed the 'powerhouse'!",
+    explanation: "The mitochondria produces ATP (energy) for the cell through cellular respiration. That's why it's nicknamed the 'powerhouse'\!",
     icon: <Zap size={28} strokeWidth={1.8} />,
   },
   {
@@ -30,7 +30,7 @@ const questions: Question[] = [
     question: "What is 12 × 13?",
     options: ["144", "156", "148", "162"],
     correct: 1,
-    explanation: "12 × 13 = 12 × 10 + 12 × 3 = 120 + 36 = 156. Breaking multiplication into parts makes it easier!",
+    explanation: "12 × 13 = 12 × 10 + 12 × 3 = 120 + 36 = 156. Breaking multiplication into parts makes it easier\!",
     icon: <Hash size={28} strokeWidth={1.8} />,
   },
   {
@@ -121,13 +121,13 @@ export default function QuizPage() {
               Today&apos;s Quiz
             </h1>
             <p className="text-[#9999a8] text-sm leading-relaxed">
-              5 questions across different subjects. Take your time and do your best!
+              5 questions across different subjects. Take your time and do your best\!
             </p>
           </div>
 
           <div className="w-full bg-[#141416] border border-[rgba(255,255,255,0.07)] rounded-3xl p-5 space-y-4">
             {[
-              { icon: <HelpCircle size={20} strokeWidth={1.8} color="#9999a8" />, label: "5 questions" },
+              { icon: <Lightbulb size={20} strokeWidth={1.8} color="#9999a8" />, label: "5 questions" },
               { icon: <Clock size={20} strokeWidth={1.8} color="#9999a8" />, label: "~3 minutes" },
               { icon: <Zap size={20} strokeWidth={1.8} color="#9999a8" />, label: "+50 XP on completion" },
               { icon: <Lightbulb size={20} strokeWidth={1.8} color="#9999a8" />, label: "Explanations after each answer" },
@@ -140,7 +140,7 @@ export default function QuizPage() {
           </div>
 
           <Button onClick={start} fullWidth size="xl">Start quiz →</Button>
-          <button onClick={() => router.back()} className="text-sm text-[#3a3a3f] hover:text-[#5a5a68] transition-colors">
+          <button onClick={() => router.back()} className="text-sm text-[#6a6a78] hover:text-[#9999a8] transition-colors">
             Maybe later
           </button>
         </div>
@@ -151,10 +151,10 @@ export default function QuizPage() {
   if (phase === "complete") {
     const feedback =
       percentage >= 80
-        ? { msg: "Excellent work!", mood: "excited" as const, color: "#00e5a0" }
+        ? { msg: "Excellent work\!", mood: "excited" as const, color: "#00e5a0" }
         : percentage >= 60
-        ? { msg: "Good effort!", mood: "happy" as const, color: "#4d9fff" }
-        : { msg: "Keep practising!", mood: "neutral" as const, color: "#f5a623" };
+        ? { msg: "Good effort\!", mood: "happy" as const, color: "#4d9fff" }
+        : { msg: "Keep practising\!", mood: "neutral" as const, color: "#f5a623" };
 
     return (
       <div className="flex flex-col items-center justify-center min-h-full px-6 gap-8">
@@ -166,7 +166,7 @@ export default function QuizPage() {
             <h1 className="text-5xl font-bold text-[#f5f5f7]" style={{ letterSpacing: "-0.04em" }}>
               {score}/{total}
             </h1>
-            <p className="text-[#5a5a68] text-sm">{percentage}% correct</p>
+            <p className="text-[#9999a8] text-sm">{percentage}% correct</p>
           </div>
 
           {/* Score dots */}
@@ -193,7 +193,7 @@ export default function QuizPage() {
             <Zap size={24} color="#00e5a0" strokeWidth={1.8} />
             <div>
               <p className="text-[#00e5a0] font-bold text-lg">+{score * 10} XP earned</p>
-              <p className="text-xs text-[#5a5a68]">Keep streaks going for bonus XP!</p>
+              <p className="text-xs text-[#9999a8]">Keep streaks going for bonus XP\!</p>
             </div>
           </div>
 
@@ -217,7 +217,7 @@ export default function QuizPage() {
         <div className="flex items-center gap-3 mb-4">
           <button
             onClick={() => router.back()}
-            className="w-9 h-9 rounded-xl bg-[#141416] border border-[rgba(255,255,255,0.07)] flex items-center justify-center text-[#5a5a68] hover:text-[#9999a8] transition-colors"
+            className="w-9 h-9 rounded-xl bg-[#141416] border border-[rgba(255,255,255,0.07)] flex items-center justify-center text-[#9999a8] hover:text-[#c8c8d4] transition-colors"
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
               <path d="M15 18l-6-6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
@@ -229,7 +229,7 @@ export default function QuizPage() {
               style={{ width: `${((current) / total) * 100}%`, transitionTimingFunction: "cubic-bezier(0.16,1,0.3,1)" }}
             />
           </div>
-          <span className="text-xs font-medium text-[#5a5a68] w-10 text-right">
+          <span className="text-xs font-medium text-[#9999a8] w-10 text-right">
             {current + 1}/{total}
           </span>
         </div>
@@ -257,7 +257,7 @@ export default function QuizPage() {
           {q.options.map((opt, i) => {
             const isSelected = selected === i;
             const isCorrect  = i === q.correct;
-            const state = !answered
+            const state = \!answered
               ? "idle"
               : isCorrect ? "correct"
               : isSelected ? "wrong"
@@ -280,10 +280,10 @@ export default function QuizPage() {
                 <div
                   className={cn(
                     "w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0 transition-all",
-                    state === "idle"    && "bg-[#1a1a1d] text-[#5a5a68]",
+                    state === "idle"    && "bg-[#1a1a1d] text-[#9999a8]",
                     state === "correct" && "bg-[#00e5a0] text-[#0f0f10]",
                     state === "wrong"   && "bg-[#ff4d4d] text-white",
-                    state === "dimmed"  && "bg-[#1a1a1d] text-[#3a3a3f]"
+                    state === "dimmed"  && "bg-[#1a1a1d] text-[#9999a8]"
                   )}
                 >
                   {answered && isCorrect ? "✓" : answered && isSelected ? "✗" : String.fromCharCode(65 + i)}
@@ -309,7 +309,7 @@ export default function QuizPage() {
             }}
           >
             <p className="text-xs font-semibold mb-1.5" style={{ color: selected === q.correct ? "#00e5a0" : "#f5a623" }}>
-              {selected === q.correct ? "✓ Correct!" : "Not quite — here's why:"}
+              {selected === q.correct ? "✓ Correct\!" : "Not quite — here's why:"}
             </p>
             <p className="text-sm text-[#9999a8] leading-relaxed">{q.explanation}</p>
           </div>

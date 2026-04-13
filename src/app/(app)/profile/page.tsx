@@ -51,7 +51,7 @@ function getStoredUser() {
 
 export default function ProfilePage() {
   const router = useRouter();
-  const stored = typeof window !== "undefined" ? getStoredUser() : { name: "Learner", email: "" };
+  const stored = typeof window \!== "undefined" ? getStoredUser() : { name: "Learner", email: "" };
   const [name, setName] = useState(stored.name);
   const [email] = useState(stored.email);
   const [preferredMode, setPreferredMode] = useState<LearningMode>("text");
@@ -140,7 +140,7 @@ export default function ProfilePage() {
           <div className="flex items-center gap-2">
             <Zap size={11} strokeWidth={2} color="#00e5a0" />
             <span className="text-xs text-[#9999a8]">{xp} XP total</span>
-            <span className="text-[#3a3a3f]">·</span>
+            <span className="text-[#6a6a78]">·</span>
             <Flame size={11} strokeWidth={2} color="#f5a623" />
             <span className="text-xs text-[#9999a8]">{streak} day streak</span>
           </div>
@@ -168,15 +168,16 @@ export default function ProfilePage() {
             {modeOptions.map((m) => (
               <button
                 key={m.id}
-                onClick={() => m.id !== "spatial" && setPreferredMode(m.id)}
+                onClick={() => m.id \!== "spatial" && setPreferredMode(m.id)}
                 disabled={m.id === "spatial"}
                 className={cn(
                   "flex flex-col items-start gap-1.5 p-4 rounded-2xl border transition-all duration-200 text-left",
                   preferredMode === m.id
-                    ? "bg-[rgba(0,229,160,0.1)] border-[rgba(0,229,160,0.35)]"
+                    ? "border-[rgba(0,229,160,0.35)]"
                     : "bg-[#141416] border-[rgba(255,255,255,0.07)]",
                   m.id === "spatial" && "opacity-40"
                 )}
+                style={preferredMode === m.id ? { backgroundColor: "rgba(0,229,160,0.12)" } : {}}
               >
                 <span style={{ color: preferredMode === m.id ? "#00e5a0" : "#9999a8" }}>{m.icon}</span>
                 <span className={cn("text-sm font-semibold", preferredMode === m.id ? "text-[#00e5a0]" : "text-[#f5f5f7]")}>
@@ -202,7 +203,7 @@ export default function ProfilePage() {
                     : "bg-[#141416] border-[rgba(255,255,255,0.05)] opacity-40"
                 )}
               >
-                <span style={{ color: a.earned ? "#00e5a0" : "#5a5a68" }}>{a.icon}</span>
+                <span style={{ color: a.earned ? "#00e5a0" : "#9999a8" }}>{a.icon}</span>
                 <span className="text-[10px] font-semibold text-[#c8c8d4] leading-tight">{a.label}</span>
               </div>
             ))}
@@ -219,7 +220,7 @@ export default function ProfilePage() {
             >
               <span className="text-[#9999a8]">{item.icon}</span>
               <span className="flex-1 text-sm font-medium text-[#f5f5f7]">{item.label}</span>
-              <ChevronRight size={14} strokeWidth={2} color="#5a5a68" />
+              <ChevronRight size={14} strokeWidth={2} color="#9999a8" />
             </button>
           ))}
         </section>
@@ -229,7 +230,7 @@ export default function ProfilePage() {
           Sign out
         </Button>
 
-        <p className="text-center text-xs text-[#5a5a68] animate-fade-up delay-700">
+        <p className="text-center text-xs text-[#9999a8] animate-fade-up delay-700">
           Marlos v0.1.0
         </p>
       </div>

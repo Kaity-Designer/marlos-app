@@ -21,7 +21,7 @@ export default function AuthPage() {
   const [showPass, setShowPass] = useState(false);
 
   const savedName =
-    typeof window !== "undefined"
+    typeof window \!== "undefined"
       ? JSON.parse(localStorage.getItem("marlos-profile") || "{}").name || ""
       : "";
 
@@ -95,7 +95,7 @@ export default function AuthPage() {
             className={cn(
               "flex-1 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200",
               mode === m
-                ? "bg-[#00e5a0] text-[#0a0a0a] shadow-[0_0_16px_rgba(0,229,160,0.25)]"
+                ? "toggle-active shadow-[0_0_16px_rgba(0,229,160,0.25)]"
                 : "text-[#9999a8] hover:text-[#c8c8d4]"
             )}
           >
@@ -156,8 +156,8 @@ export default function AuthPage() {
           trailing={
             <button
               type="button"
-              onClick={() => setShowPass((v) => !v)}
-              className="text-[#5a5a68] hover:text-[#9999a8] transition-colors"
+              onClick={() => setShowPass((v) => \!v)}
+              className="text-[#9999a8] hover:text-[#c8c8d4] transition-colors"
             >
               {showPass ? (
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none">

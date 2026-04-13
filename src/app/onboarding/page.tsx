@@ -18,7 +18,7 @@ type Step = {
 const steps: Step[] = [
   {
     id: 0,
-    question: "Hey! How do you like to learn?",
+    question: "Hey\! How do you like to learn?",
     subtext: "We'll personalise everything just for you.",
     options: [
       { id: "reading", label: "Reading & writing", icon: <BookText size={24} strokeWidth={1.8} />, desc: "I love taking notes and reading" },
@@ -75,7 +75,7 @@ export default function OnboardingPage() {
     if (current.multi) {
       const prev = (selections[step] as string[]) || [];
       const next = prev.includes(optId)
-        ? prev.filter((x) => x !== optId)
+        ? prev.filter((x) => x \!== optId)
         : [...prev, optId];
       setSelections((s) => ({ ...s, [step]: next }));
     } else {
@@ -107,7 +107,7 @@ export default function OnboardingPage() {
       ? name.trim().length >= 2
       : current.multi
       ? ((selections[step] as string[]) || []).length > 0
-      : !!selections[step];
+      : \!\!selections[step];
 
   const blobMood =
     step === 0 ? "happy" : step === 1 ? "thinking" : step === 2 ? "excited" : "happy";
@@ -138,7 +138,7 @@ export default function OnboardingPage() {
       )}
 
       {/* Step counter */}
-      <div className="absolute top-6 right-5 z-10 text-xs font-medium text-[#5a5a68]">
+      <div className="absolute top-6 right-5 z-10 text-xs font-medium text-[#9999a8]">
         {step + 1} / {totalSteps}
       </div>
 
@@ -155,7 +155,7 @@ export default function OnboardingPage() {
               {current.question}
             </h2>
             {current.subtext && (
-              <p className="text-sm text-[#5a5a68]">{current.subtext}</p>
+              <p className="text-sm text-[#9999a8]">{current.subtext}</p>
             )}
           </div>
         </div>
@@ -197,13 +197,10 @@ export default function OnboardingPage() {
                     "transition-all duration-200 active:scale-[0.97]",
                     current.options.length > 4 ? "flex-col items-center text-center p-5 gap-2" : "",
                     isSelected
-                      ? "bg-[rgba(0,229,160,0.1)] border-[rgba(0,229,160,0.4)] shadow-[0_0_24px_rgba(0,229,160,0.12)]"
+                      ? "border-[rgba(0,229,160,0.4)] shadow-[0_0_24px_rgba(0,229,160,0.12)]"
                       : "bg-[#141416] border-[rgba(255,255,255,0.07)] hover:bg-[#1a1a1d] hover:border-[rgba(255,255,255,0.12)]"
                   )}
-                  style={{
-                    animationDelay: `${i * 60 + 100}ms`,
-                    transitionTimingFunction: "cubic-bezier(0.16,1,0.3,1)",
-                  }}
+                  style={isSelected ? { backgroundColor: "rgba(0,229,160,0.1)" } : {}}
                 >
                   <div className="flex items-center justify-center" style={{ width: 24, height: 24 }}>{opt.icon}</div>
                   <div className="flex flex-col gap-0.5">
@@ -216,7 +213,7 @@ export default function OnboardingPage() {
                       {opt.label}
                     </span>
                     {opt.desc && (
-                      <span className="text-xs text-[#5a5a68]">{opt.desc}</span>
+                      <span className="text-xs text-[#9999a8]">{opt.desc}</span>
                     )}
                   </div>
                   {isSelected && (
@@ -237,7 +234,7 @@ export default function OnboardingPage() {
           <div className="mt-auto animate-fade-up delay-300">
             <Button
               onClick={advance}
-              disabled={!canContinue}
+              disabled={\!canContinue}
               fullWidth
               size="xl"
             >
@@ -247,10 +244,10 @@ export default function OnboardingPage() {
         )}
 
         {/* Skip for non-multi non-name steps */}
-        {!current.multi && step !== 3 && step > 0 && (
+        {\!current.multi && step \!== 3 && step > 0 && (
           <button
             onClick={advance}
-            className="text-center text-sm text-[#3a3a3f] hover:text-[#5a5a68] transition-colors mt-auto"
+            className="text-center text-sm text-[#6a6a78] hover:text-[#9999a8] transition-colors mt-auto"
           >
             Skip for now
           </button>
