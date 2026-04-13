@@ -20,9 +20,8 @@ const sizeStyles: Record<Size, string> = {
   xl: "h-16 px-8  text-lg  font-bold rounded-3xl",
 };
 
-// All variants use real <button> elements. Color is forced via inline style on primary.
 const variantClass: Record<Variant, string> = {
-  primary:  "font-bold",
+  primary:  "btn-primary-force font-bold",
   secondary:"bg-[#1a1a1d] text-[#f5f5f7] border border-[rgba(255,255,255,0.08)] hover:bg-[#212124]",
   ghost:    "text-[#9999a8] hover:text-[#f5f5f7] hover:bg-[rgba(255,255,255,0.05)]",
   danger:   "bg-[rgba(255,77,77,0.15)] text-[#ff4d4d] border border-[rgba(255,77,77,0.2)] hover:bg-[rgba(255,77,77,0.25)]",
@@ -49,7 +48,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         )}
         style={{
           transitionTimingFunction: "cubic-bezier(0.16,1,0.3,1)",
-          // Force primary colours — these override EVERYTHING including global resets
+          // Double-enforced: CSS utility class + inline style so nothing can override
           ...(isPrimary && {
             backgroundColor: "#00e5a0",
             color: "#050505",

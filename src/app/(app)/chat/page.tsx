@@ -269,12 +269,12 @@ function ChatContent() {
           <button
             onClick={() => sendMessage(input)}
             disabled={!input.trim() || loading}
-            className={cn(
-              "w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0 transition-all duration-200 active:scale-90",
+            className="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0 transition-all duration-200 active:scale-90"
+            style={
               input.trim() && !loading
-                ? "bg-[#00e5a0] text-[#0f0f10] shadow-[0_0_20px_rgba(0,229,160,0.3)]"
-                : "bg-[#1a1a1d] text-[#3a3a3f]"
-            )}
+                ? { backgroundColor: "#00e5a0", color: "#0f0f10", boxShadow: "0 0 20px rgba(0,229,160,0.3)" }
+                : { backgroundColor: "#1a1a1d", color: "#3a3a3f" }
+            }
           >
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
               <path

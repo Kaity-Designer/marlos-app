@@ -63,15 +63,30 @@ body {
 /* ─── Typography ────────────────────────────────────────────────────── */
 h1, h2, h3, h4, h5, h6 { font-weight: 700; letter-spacing: -0.02em; margin: 0; }
 p { margin: 0; }
-/* Base button reset — do NOT reset background so inline styles can apply */
-button { cursor: pointer; border: none; font-family: inherit; }
-
-/* Active toggle pill */
-.toggle-active {
-  background-color: #00e5a0 !important;
-  color: #0a0a0a !important;
+/* ─── Override Tailwind preflight inside @layer base ────────────────── */
+@layer base {
+  button {
+    cursor: pointer;
+    border: none;
+    font-family: inherit;
+    /* Do NOT reset background-color here — let component styles apply */
+  }
+  input, textarea, select { font-family: inherit; font-size: inherit; }
 }
-input, textarea, select { font-family: inherit; font-size: inherit; }
+
+/* ─── Primary button colours — @layer utilities wins over everything ── */
+@layer utilities {
+  .btn-primary-force {
+    background-color: #00e5a0 !important;
+    color: #050505 !important;
+    box-shadow: 0 0 24px rgba(0,229,160,0.25) !important;
+  }
+  .toggle-active {
+    background-color: #00e5a0 !important;
+    color: #0a0a0a !important;
+    box-shadow: 0 0 16px rgba(0,229,160,0.3) !important;
+  }
+}
 
 /* ─── Scrollbar ─────────────────────────────────────────────────────── */
 .scroll { overflow-y: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
