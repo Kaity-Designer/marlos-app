@@ -4,21 +4,44 @@ import { createServerClient } from "@supabase/ssr";
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Public routes — no auth needed
+  // Public routes — always allow
   const publicRoutes = ["/", "/onboarding", "/auth"];
   if (publicRoutes.some((r) => pathname === r || pathname.startsWith(r + "/"))) {
+    // If user already has a session and tries to visit /auth, redirect to /home
+    if (pathname.startsWith("/auth")) {
+      try {
+        let response = NextResponse.next({ request });
+        const supabase = createServerClient(
+          process.env.NEXT_PUBLIC_SUPABASE_URL!,
+          process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+          {
+            cookies: {
+              getAll() { return request.cookies.getAll(); },
+              setAll(cookiesToSet) {
+                cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value));
+                response = NextResponse.next({ request });
+                cookiesToSet.forEach(({ name, value, options }) => response.cookies.set(name, value, options));
+              },
+            },
+          }
+        );
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) {
+          return NextResponse.redirect(new URL("/home", request.url));
+        }
+      } catch { /* ignore */ }
+    }
     return NextResponse.next();
   }
 
-  // API routes — skip middleware
-  if (pathname.startsWith("/api")) {
+  // API routes — skip
+  if (pathname.startsWith("/api") || pathname.startsWith("/_next")) {
     return NextResponse.next();
   }
 
-  // Check Supabase session
-  let response = NextResponse.next({ request });
-
+  // Protected routes — check for session
   try {
+    let response = NextResponse.next({ request });
     const supabase = createServerClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -28,9 +51,7 @@ export async function middleware(request: NextRequest) {
           setAll(cookiesToSet) {
             cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value));
             response = NextResponse.next({ request });
-            cookiesToSet.forEach(({ name, value, options }) =>
-              response.cookies.set(name, value, options)
-            );
+            cookiesToSet.forEach(({ name, value, options }) => response.cookies.set(name, value, options));
           },
         },
       }
@@ -38,18 +59,15 @@ export async function middleware(request: NextRequest) {
 
     const { data: { user } } = await supabase.auth.getUser();
 
-    // If no Supabase user, allow access anyway (prototype mode — uses localStorage)
-    // In production: redirect to /auth if !user
     if (!user) {
-      // For prototype: let through, auth state managed in client
+      // No Supabase session — allow through (app uses localStorage as fallback)
       return response;
     }
-  } catch {
-    // Supabase not configured — allow access for prototype
-    return response;
-  }
 
-  return response;
+    return response;
+  } catch {
+    return NextResponse.next();
+  }
 }
 
 export const config = {

@@ -1,121 +1,123 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
-import { MessageCircle, Library, ClipboardCheck, User, Home, Headphones, Box, Compass, Sliders } from "lucide-react";
+import { ClipboardCheck, Headphones, Box, Compass, Sliders, MessageCircle } from "lucide-react";
 import { BlobCharacter } from "@/components/ui/BlobCharacter";
 
 function WelcomeMessage() {
   const hour = new Date().getHours();
   const greeting = hour < 12 ? "Good morning" : hour < 18 ? "Good afternoon" : "Good evening";
-  const [name, setName] = useState("Mia");
-  
+  const [name, setName] = useState("there");
+
   useEffect(() => {
     try {
       const session = JSON.parse(localStorage.getItem("marlos-session") || "{}");
       const profile = JSON.parse(localStorage.getItem("marlos-profile") || "{}");
-      setName(session.name || profile.name || "Mia");
+      setName(session.name || profile.name || "there");
     } catch {
-      setName("Mia");
+      setName("there");
     }
   }, []);
-  
-  return (
-    <div className="text-center px-6">
-      <h1 className="text-white mb-1">{greeting}, {name}</h1>
-      <p className="text-white/70">What shall we learn today?</p>
-    </div>
-  );
-}
 
-function QuickAccessButton({ icon: Icon, label, onClick }: { icon: any; label: string; onClick: () => void }) {
   return (
-    <motion.button
-      onClick={onClick}
-      className="flex items-center gap-3 bg-gradient-to-r from-[#00e5a0]/20 to-[#00e5a0]/10 backdrop-blur-sm rounded-full px-5 py-3.5 border border-[#00e5a0]/30"
-      whileHover={{ scale: 1.02, boxShadow: "0 0 20px rgba(0, 229, 160, 0.3)" }}
-      whileTap={{ scale: 0.98 }}
-    >
-      <Icon className="w-5 h-5 text-[#00e5a0]" />
-      <span className="text-white text-sm">{label}</span>
-    </motion.button>
+    <div style={{ textAlign: "center", padding: "0 24px" }}>
+      <h1 style={{ color: "white", fontSize: 22, fontWeight: 700, letterSpacing: "-0.03em", margin: 0 }}>
+        {greeting}, {name}
+      </h1>
+      <p style={{ color: "rgba(255,255,255,0.6)", fontSize: 14, marginTop: 4 }}>
+        What shall we learn today?
+      </p>
+    </div>
   );
 }
 
 function DraggableCard() {
   const [isExpanded, setIsExpanded] = useState(false);
-  
-  const quickAccessItems = [
-    { icon: ClipboardCheck, label: "Tests" },
-    { icon: Box, label: "AR Mode" },
-    { icon: MessageCircle, label: "Chat" },
-    { icon: Headphones, label: "Podcast" },
-    { icon: Compass, label: "Explore" },
-    { icon: Sliders, label: "Tools" },
+
+  const items = [
+    { icon: ClipboardCheck, label: "Tests",   href: "/quiz" },
+    { icon: Box,            label: "AR Mode",  href: "#" },
+    { icon: MessageCircle,  label: "Chat",     href: "/chat" },
+    { icon: Headphones,     label: "Podcast",  href: "#" },
+    { icon: Compass,        label: "Explore",  href: "#" },
+    { icon: Sliders,        label: "Tools",    href: "#" },
   ];
 
   return (
-    <motion.div
-      className="fixed bottom-[88px] left-0 right-0 px-5 z-20"
-      animate={{ 
-        height: isExpanded ? "auto" : "auto",
-      }}
-    >
+    /* sits just above the nav bar (nav is ~88px tall) */
+    <div style={{ position: "fixed", bottom: 96, left: 0, right: 0, padding: "0 20px", zIndex: 20 }}>
       <motion.div
-        className="backdrop-blur-xl bg-[#3D4149]/60 rounded-[40px] shadow-xl border border-white/10 overflow-hidden"
-        animate={{
-          paddingTop: 8,
-          paddingBottom: isExpanded ? 24 : 16,
-          paddingLeft: 16,
-          paddingRight: 16,
+        style={{
+          backdropFilter: "blur(20px)",
+          WebkitBackdropFilter: "blur(20px)",
+          backgroundColor: "rgba(55,58,65,0.75)",
+          borderRadius: 32,
+          border: "1px solid rgba(255,255,255,0.1)",
+          boxShadow: "0 8px 32px rgba(0,0,0,0.4)",
+          overflow: "hidden",
         }}
+        animate={{ paddingBottom: isExpanded ? 20 : 14 }}
         transition={{ type: "spring", stiffness: 300, damping: 30 }}
       >
-        {/* Drag Handle */}
-        <div className="flex items-center justify-center mb-3">
-          <div className="w-10 h-1 bg-white/20 rounded-full" />
+        {/* Handle */}
+        <div style={{ display: "flex", justifyContent: "center", padding: "10px 0 6px" }}>
+          <div style={{ width: 36, height: 4, backgroundColor: "rgba(255,255,255,0.2)", borderRadius: 2 }} />
         </div>
 
-        {/* Title */}
-        <h2 className="text-white text-center text-sm">Your Learning Journey</h2>
-
-        {/* Tap to expand hint when collapsed */}
-        {!isExpanded && (
-          <motion.button
-            className="w-full text-white/40 text-xs mt-1.5 text-center"
-            onClick={() => setIsExpanded(true)}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.3 }}
-          >
-            Tap or drag up to expand
-          </motion.button>
-        )}
-
-        {/* Expanded Content */}
-        <motion.div
-          initial={false}
-          animate={{
-            height: isExpanded ? "auto" : 0,
-            opacity: isExpanded ? 1 : 0,
-          }}
-          transition={{ type: "spring", stiffness: 300, damping: 30 }}
-          className="overflow-hidden"
+        {/* Title row */}
+        <button
+          onClick={() => setIsExpanded(v => !v)}
+          style={{ width: "100%", background: "none", border: "none", cursor: "pointer", padding: "0 16px 6px", textAlign: "center" }}
         >
-          <div className="grid grid-cols-2 gap-3 mt-4">
-            {quickAccessItems.map((item, index) => (
-              <QuickAccessButton
-                key={index}
-                icon={item.icon}
-                label={item.label}
-                onClick={() => console.log(`Navigate to ${item.label}`)}
-              />
-            ))}
-          </div>
-        </motion.div>
+          <span style={{ color: "white", fontSize: 13, fontWeight: 600 }}>Your Learning Journey</span>
+          <span style={{ color: "rgba(255,255,255,0.35)", fontSize: 11, display: "block", marginTop: 2 }}>
+            {isExpanded ? "Tap to collapse" : "Tap to expand"}
+          </span>
+        </button>
+
+        {/* Expanded grid */}
+        <AnimatePresence initial={false}>
+          {isExpanded && (
+            <motion.div
+              key="grid"
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ type: "spring", stiffness: 300, damping: 30 }}
+              style={{ overflow: "hidden" }}
+            >
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, padding: "8px 16px 0" }}>
+                {items.map((item, i) => {
+                  const Icon = item.icon;
+                  return (
+                    <Link key={i} href={item.href}>
+                      <motion.div
+                        whileTap={{ scale: 0.97 }}
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 10,
+                          background: "linear-gradient(to right, rgba(0,206,147,0.18), rgba(0,206,147,0.08))",
+                          border: "1px solid rgba(0,206,147,0.25)",
+                          borderRadius: 50,
+                          padding: "12px 16px",
+                          cursor: "pointer",
+                        }}
+                      >
+                        <Icon style={{ width: 18, height: 18, color: "#00ce93", flexShrink: 0 }} />
+                        <span style={{ color: "white", fontSize: 13 }}>{item.label}</span>
+                      </motion.div>
+                    </Link>
+                  );
+                })}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </motion.div>
-    </motion.div>
+    </div>
   );
 }
 
@@ -123,111 +125,90 @@ export default function HomePage() {
   const [showTooltip, setShowTooltip] = useState(false);
 
   return (
-    <div className="relative h-screen bg-gradient-to-b from-[#231f20] to-[#1c191a] overflow-hidden flex flex-col">
+    <div
+      style={{
+        position: "relative",
+        height: "100dvh",
+        background: "linear-gradient(to bottom, #231f20, #1c191a)",
+        overflow: "hidden",
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
       {/* Header */}
-      <div className="pt-8 pb-4 flex-shrink-0">
+      <div style={{ paddingTop: 56, paddingBottom: 16, flexShrink: 0 }}>
         <WelcomeMessage />
       </div>
 
-      {/* Central Blob Section */}
-      <div className="absolute top-[20%] left-1/2 -translate-x-1/2 flex items-center justify-center">
-        {/* Background glow effect */}
+      {/* Central Blob — fills the middle of the screen */}
+      <div
+        style={{
+          position: "absolute",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -56%)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        {/* Glow ring */}
         <motion.div
-          className="absolute w-[350px] h-[350px] rounded-full"
           style={{
-            background: "radial-gradient(circle, rgba(0, 229, 160, 0.3) 0%, rgba(0, 229, 160, 0) 70%)",
+            position: "absolute",
+            width: 360,
+            height: 360,
+            borderRadius: "50%",
+            background: "radial-gradient(circle, rgba(0,206,147,0.22) 0%, transparent 70%)",
+            pointerEvents: "none",
           }}
-          animate={{
-            scale: [1, 1.2, 1],
-            opacity: [0.5, 0.8, 0.5],
-          }}
-          transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+          animate={{ scale: [1, 1.15, 1], opacity: [0.6, 0.9, 0.6] }}
+          transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
         />
 
-        {/* Central Blob Character */}
+        {/* Blob */}
         <motion.div
-          className="relative z-10 cursor-pointer w-[250px] h-[250px] flex items-center justify-center"
+          style={{ position: "relative", zIndex: 10, cursor: "pointer" }}
           onHoverStart={() => setShowTooltip(true)}
           onHoverEnd={() => setShowTooltip(false)}
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
+          whileHover={{ scale: 1.04 }}
+          whileTap={{ scale: 0.96 }}
         >
-          <Link href="/chat" className="w-full h-full flex items-center justify-center">
-            <BlobCharacter size={120} mood="happy" animated />
+          <Link href="/chat" style={{ display: "block" }}>
+            <BlobCharacter size={220} mood="happy" animated />
           </Link>
         </motion.div>
 
         {/* Tooltip */}
-        <motion.div
-          className="absolute top-[calc(100%+20px)] left-1/2 -translate-x-1/2 bg-[#231F20] text-white px-4 py-2 rounded-full text-sm shadow-lg whitespace-nowrap"
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: showTooltip ? 1 : 0, y: showTooltip ? 0 : 10 }}
-          transition={{ duration: 0.2 }}
-        >
-          Ask me anything! 💬
-        </motion.div>
+        <AnimatePresence>
+          {showTooltip && (
+            <motion.div
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 8 }}
+              style={{
+                position: "absolute",
+                top: "calc(100% + 16px)",
+                left: "50%",
+                transform: "translateX(-50%)",
+                backgroundColor: "rgba(35,31,32,0.95)",
+                border: "1px solid rgba(255,255,255,0.1)",
+                color: "white",
+                padding: "8px 16px",
+                borderRadius: 99,
+                fontSize: 13,
+                whiteSpace: "nowrap",
+                boxShadow: "0 4px 16px rgba(0,0,0,0.4)",
+              }}
+            >
+              Ask me anything! 💬
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
-      {/* Draggable Card */}
+      {/* Draggable card sits above the nav bar */}
       <DraggableCard />
-
-      {/* Bottom Navigation */}
-      <div className="fixed bottom-6 left-1/2 -translate-x-1/2 w-[90%] max-w-[400px] z-30">
-        <div className="backdrop-blur-xl bg-[#2D2D2D]/95 rounded-[40px] px-4 py-3 shadow-2xl border border-white/5">
-          <div className="flex items-end justify-between">
-            {[
-              { icon: Home, label: "Home", active: true, center: false },
-              { icon: Library, label: "Library", active: false, center: false },
-              { icon: MessageCircle, label: "Marlos", active: false, center: true },
-              { icon: ClipboardCheck, label: "Tests", active: false, center: false },
-              { icon: User, label: "Profile", active: false, center: false },
-            ].map((item) => (
-              <Link 
-                key={item.label}
-                href={item.label === "Home" ? "/home" : item.label === "Library" ? "/library" : item.label === "Marlos" ? "/chat" : item.label === "Tests" ? "/quiz" : "/profile"}
-              >
-                <motion.button
-                  className="flex flex-col items-center gap-1.5 flex-1"
-                  whileTap={{ scale: 0.9 }}
-                >
-                  <div
-                    className={`rounded-full flex items-center justify-center transition-all ${
-                      item.center
-                        ? "w-16 h-16 bg-gradient-to-br from-[#00e5a0] to-[#00a076] shadow-lg shadow-[#00e5a0]/40 -mt-4"
-                        : item.active
-                        ? "w-12 h-12 bg-[#00e5a0]/20"
-                        : "w-12 h-12 bg-transparent"
-                    }`}
-                  >
-                    <item.icon
-                      className={`${item.center ? "w-7 h-7" : "w-5 h-5"} ${
-                        item.center || item.active ? "text-white" : "text-white/50"
-                      }`}
-                    />
-                  </div>
-                  <span
-                    className={`text-[10px] ${
-                      item.center || item.active ? "text-[#00e5a0]" : "text-white/50"
-                    }`}
-                  >
-                    {item.label}
-                  </span>
-                </motion.button>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      <style>{`
-        .scrollbar-hide::-webkit-scrollbar {
-          display: none;
-        }
-        .scrollbar-hide {
-          -ms-overflow-style: none;
-          scrollbar-width: none;
-        }
-      `}</style>
     </div>
   );
 }
