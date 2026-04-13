@@ -61,20 +61,33 @@ export default function LibraryPage() {
 
       {/* Categories */}
       <div className="flex gap-2 px-5 overflow-x-auto scroll pb-3 animate-fade-up delay-200">
-        {categories.map((cat) => (
-          <button
-            key={cat}
-            onClick={() => setActiveCategory(cat)}
-            className={cn(
-              "flex-shrink-0 px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-200",
-              activeCategory === cat
-                ? "toggle-active shadow-[0_0_16px_rgba(0,229,160,0.2)]"
-                : "bg-[#141416] text-[#9999a8] border border-[rgba(255,255,255,0.07)] hover:text-[#f5f5f7]"
-            )}
-          >
-            {cat}
-          </button>
-        ))}
+        {categories.map((cat) =>
+          activeCategory === cat ? (
+            <div
+              key={cat}
+              role="button"
+              tabIndex={0}
+              onClick={() => setActiveCategory(cat)}
+              onKeyDown={(e) => e.key === "Enter" && setActiveCategory(cat)}
+              className="flex-shrink-0 px-4 py-2 rounded-xl text-sm font-semibold cursor-pointer select-none"
+              style={{
+                backgroundColor: "#00e5a0",
+                color: "#0a0a0a",
+                boxShadow: "0 0 16px rgba(0,229,160,0.2)",
+              }}
+            >
+              {cat}
+            </div>
+          ) : (
+            <button
+              key={cat}
+              onClick={() => setActiveCategory(cat)}
+              className="flex-shrink-0 px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-200 bg-[#141416] text-[#9999a8] border border-[rgba(255,255,255,0.07)] hover:text-[#f5f5f7]"
+            >
+              {cat}
+            </button>
+          )
+        )}
       </div>
 
       {/* Grid */}

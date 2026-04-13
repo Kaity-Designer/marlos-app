@@ -89,18 +89,31 @@ export default function AuthPage() {
       {/* Mode toggle */}
       <div className="flex mx-6 p-1 bg-[#141416] rounded-2xl border border-[rgba(255,255,255,0.06)] mb-6 animate-fade-up delay-100">
         {(["signup", "signin"] as Mode[]).map((m) => (
-          <button
-            key={m}
-            onClick={() => { setMode(m); setError(""); }}
-            className={cn(
-              "flex-1 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200",
-              mode === m
-                ? "toggle-active shadow-[0_0_16px_rgba(0,229,160,0.25)]"
-                : "text-[#9999a8] hover:text-[#c8c8d4]"
-            )}
-          >
-            {m === "signup" ? "Sign up" : "Sign in"}
-          </button>
+          mode === m ? (
+            <div
+              key={m}
+              role="button"
+              tabIndex={0}
+              onClick={() => { setMode(m); setError(""); }}
+              onKeyDown={(e) => e.key === "Enter" && setMode(m)}
+              className="flex-1 py-2.5 rounded-xl text-sm font-semibold text-center cursor-pointer select-none"
+              style={{
+                backgroundColor: "#00e5a0",
+                color: "#0a0a0a",
+                boxShadow: "0 0 16px rgba(0,229,160,0.3)",
+              }}
+            >
+              {m === "signup" ? "Sign up" : "Sign in"}
+            </div>
+          ) : (
+            <button
+              key={m}
+              onClick={() => { setMode(m); setError(""); }}
+              className="flex-1 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 text-[#9999a8] hover:text-[#c8c8d4]"
+            >
+              {m === "signup" ? "Sign up" : "Sign in"}
+            </button>
+          )
         ))}
       </div>
 
