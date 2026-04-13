@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import {
   Bell, Accessibility, Lock, Info, ChevronRight,
   Zap, Flame, BookText, Headphones, Play, Globe,
   Star, Trophy, Brain, Rocket, Gem, Compass, Pencil,
+  Users,
 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
@@ -59,6 +60,14 @@ export default function ProfilePage() {
   const [streak] = useState(5);
   const [editing, setEditing] = useState(false);
   const [editName, setEditName] = useState(stored.name);
+  const [signupCount, setSignupCount] = useState<number | null>(null);
+
+  useEffect(() => {
+    fetch("/api/signup-count")
+      .then((r) => r.json())
+      .then((d) => setSignupCount(d.count))
+      .catch(() => {});
+  }, []);
 
   function saveName() {
     if (editName.trim()) {
@@ -160,6 +169,30 @@ export default function ProfilePage() {
             ))}
           </div>
         </section>
+
+        {/* Marlos community stat - signup count */}
+        {signupCount !== null && (
+          <section className="animate-fade-up delay-250">
+            <h2 className="text-sm font-bold text-[#9999a8] uppercase tracking-wider mb-3">Community</h2>
+            <div
+              className="flex items-center gap-4 p-4 rounded-2xl border border-[rgba(0,229,160,0.15)]"
+              style={{ background: "rgba(0,229,160,0.06)" }}
+            >
+              <div
+                className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
+                style={{ background: "rgba(0,229,160,0.15)" }}
+              >
+                <Users size={20} strokeWidth={1.8} color="#00e5a0" />
+              </div>
+              <div>
+                <p className="text-2xl font-bold text-[#f5f5f7]" style={{ letterSpacing: "-0.03em" }}>
+                  {signupCount.toLocaleString()}
+                </p>
+                <p className="text-xs text-[#9999a8]">learners have joined Marlos</p>
+              </div>
+            </div>
+          </section>
+        )}
 
         {/* Learning mode */}
         <section className="animate-fade-up delay-300">

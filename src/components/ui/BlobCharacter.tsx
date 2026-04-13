@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 
 interface BlobCharacterProps {
   size?: number;
-  mood?: "happy" | "neutral" | "thinking";
+  mood?: "happy" | "neutral" | "thinking" | "excited";
   animated?: boolean;
 }
 
@@ -14,7 +14,7 @@ export function BlobCharacter({ size = 120, animated = true }: BlobCharacterProp
   const [isBlinking, setIsBlinking] = useState(false);
 
   useEffect(() => {
-    if (\!animated) return;
+    if (!animated) return;
     const seq: Array<"left" | "up" | "right" | "center"> = ["left", "up", "right", "center", "center"];
     let idx = 0;
     let blink: ReturnType<typeof setTimeout>;
@@ -150,12 +150,12 @@ export function BlobCharacter({ size = 120, animated = true }: BlobCharacterProp
         {/* Eyes */}
         <motion.g animate={{ x: eyeOffset.x, y: eyeOffset.y }} transition={{ duration:0.6, ease:[0.34,1.56,0.64,1] }}>
           <ellipse cx="172" cy="200" rx="13" ry={isBlinking ? 2 : 24} fill="url(#bc-eye)" />
-          {\!isBlinking && <>
+          {!isBlinking && <>
             <ellipse cx="175" cy="188" rx="7" ry="10" fill="#ffffff" opacity="0.95" />
             <ellipse cx="174" cy="185" rx="4" ry="5"  fill="#ffffff" />
           </>}
           <ellipse cx="228" cy="200" rx="13" ry={isBlinking ? 2 : 24} fill="url(#bc-eye)" />
-          {\!isBlinking && <>
+          {!isBlinking && <>
             <ellipse cx="231" cy="188" rx="7" ry="10" fill="#ffffff" opacity="0.95" />
             <ellipse cx="230" cy="185" rx="4" ry="5"  fill="#ffffff" />
           </>}
