@@ -78,7 +78,7 @@ export default function AuthPage() {
           <h1 className="text-2xl font-bold text-[#f5f5f7]" style={{ letterSpacing: "-0.03em" }}>
             {mode === "signup" ? "Create your account" : "Welcome back"}
           </h1>
-          <p className="text-sm text-[#5a5a68]">
+          <p className="text-sm text-[#9999a8]">
             {mode === "signup"
               ? "Your learning journey starts here"
               : "Pick up right where you left off"}
@@ -96,7 +96,7 @@ export default function AuthPage() {
               "flex-1 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200",
               mode === m
                 ? "bg-[#00e5a0] text-[#0f0f10] shadow-[0_0_16px_rgba(0,229,160,0.25)]"
-                : "text-[#5a5a68] hover:text-[#9999a8]"
+                : "text-[#7a7a88] hover:text-[#9999a8]"
             )}
           >
             {m === "signup" ? "Sign up" : "Sign in"}
@@ -186,7 +186,7 @@ export default function AuthPage() {
         {/* Divider */}
         <div className="flex items-center gap-3 my-2">
           <div className="flex-1 h-px bg-[rgba(255,255,255,0.07)]" />
-          <span className="text-xs text-[#3a3a3f]">or</span>
+          <span className="text-xs text-[#6a6a78]">or</span>
           <div className="flex-1 h-px bg-[rgba(255,255,255,0.07)]" />
         </div>
 
@@ -197,17 +197,17 @@ export default function AuthPage() {
             localStorage.setItem("marlos-session", JSON.stringify({ email: "demo@marlos.app", name: "Learner" }));
             router.replace("/home");
           }}
-          className="text-center text-sm text-[#3a3a3f] hover:text-[#5a5a68] transition-colors py-2"
+          className="text-center text-sm text-[#6a6a78] hover:text-[#9999a8] transition-colors py-2"
         >
           Continue as guest →
         </button>
       </form>
 
-      <p className="text-center text-xs text-[#3a3a3f] px-6 mt-8 pb-8">
+      <p className="text-center text-xs text-[#6a6a78] px-6 mt-8 pb-8">
         By continuing you agree to our{" "}
-        <span className="text-[#5a5a68] underline underline-offset-2">Terms</span>
+        <span className="text-[#9999a8] underline underline-offset-2">Terms</span>
         {" & "}
-        <span className="text-[#5a5a68] underline underline-offset-2">Privacy Policy</span>
+        <span className="text-[#9999a8] underline underline-offset-2">Privacy Policy</span>
       </p>
     </div>
   );

@@ -18,14 +18,14 @@ const navItems: NavItem[] = [
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
         <path
           d="M3 9.5L12 3l9 6.5V21a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"
-          stroke={active ? "#00e5a0" : "#5a5a68"}
+          stroke={active ? "#00e5a0" : "#7a7a8a"}
           strokeWidth="1.8"
           fill={active ? "rgba(0,229,160,0.12)" : "none"}
           strokeLinejoin="round"
         />
         <path
           d="M9 22V12h6v10"
-          stroke={active ? "#00e5a0" : "#5a5a68"}
+          stroke={active ? "#00e5a0" : "#7a7a8a"}
           strokeWidth="1.8"
           strokeLinejoin="round"
         />
@@ -39,7 +39,7 @@ const navItems: NavItem[] = [
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
         <path
           d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2v10z"
-          stroke={active ? "#00e5a0" : "#5a5a68"}
+          stroke={active ? "#00e5a0" : "#7a7a8a"}
           strokeWidth="1.8"
           fill={active ? "rgba(0,229,160,0.12)" : "none"}
           strokeLinejoin="round"
@@ -61,25 +61,25 @@ const navItems: NavItem[] = [
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
         <rect
           x="3" y="3" width="7" height="7" rx="1.5"
-          stroke={active ? "#00e5a0" : "#5a5a68"}
+          stroke={active ? "#00e5a0" : "#7a7a8a"}
           strokeWidth="1.8"
           fill={active ? "rgba(0,229,160,0.12)" : "none"}
         />
         <rect
           x="14" y="3" width="7" height="7" rx="1.5"
-          stroke={active ? "#00e5a0" : "#5a5a68"}
+          stroke={active ? "#00e5a0" : "#7a7a8a"}
           strokeWidth="1.8"
           fill={active ? "rgba(0,229,160,0.12)" : "none"}
         />
         <rect
           x="3" y="14" width="7" height="7" rx="1.5"
-          stroke={active ? "#00e5a0" : "#5a5a68"}
+          stroke={active ? "#00e5a0" : "#7a7a8a"}
           strokeWidth="1.8"
           fill={active ? "rgba(0,229,160,0.12)" : "none"}
         />
         <rect
           x="14" y="14" width="7" height="7" rx="1.5"
-          stroke={active ? "#00e5a0" : "#5a5a68"}
+          stroke={active ? "#00e5a0" : "#7a7a8a"}
           strokeWidth="1.8"
           fill={active ? "rgba(0,229,160,0.12)" : "none"}
         />
@@ -93,13 +93,13 @@ const navItems: NavItem[] = [
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
         <circle
           cx="12" cy="7" r="4"
-          stroke={active ? "#00e5a0" : "#5a5a68"}
+          stroke={active ? "#00e5a0" : "#7a7a8a"}
           strokeWidth="1.8"
           fill={active ? "rgba(0,229,160,0.12)" : "none"}
         />
         <path
           d="M4 21c0-4 3.6-7 8-7s8 3 8 7"
-          stroke={active ? "#00e5a0" : "#5a5a68"}
+          stroke={active ? "#00e5a0" : "#7a7a8a"}
           strokeWidth="1.8"
           strokeLinecap="round"
         />
@@ -138,7 +138,7 @@ export function BottomNav() {
               <span
                 className={cn(
                   "text-[10px] font-medium transition-colors duration-200",
-                  active ? "text-[#00e5a0]" : "text-[#5a5a68]"
+                  active ? "text-[#00e5a0]" : "text-[#7a7a8a]"
                 )}
               >
                 {item.label}
