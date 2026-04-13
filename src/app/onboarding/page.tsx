@@ -18,7 +18,7 @@ type Step = {
 const steps: Step[] = [
   {
     id: 0,
-    question: "Hey\! How do you like to learn?",
+    question: "Hey! How do you like to learn?",
     subtext: "We'll personalise everything just for you.",
     options: [
       { id: "reading", label: "Reading & writing", icon: <BookText size={24} strokeWidth={1.8} />, desc: "I love taking notes and reading" },
@@ -75,7 +75,7 @@ export default function OnboardingPage() {
     if (current.multi) {
       const prev = (selections[step] as string[]) || [];
       const next = prev.includes(optId)
-        ? prev.filter((x) => x \!== optId)
+        ? prev.filter((x) => x !== optId)
         : [...prev, optId];
       setSelections((s) => ({ ...s, [step]: next }));
     } else {
@@ -107,7 +107,7 @@ export default function OnboardingPage() {
       ? name.trim().length >= 2
       : current.multi
       ? ((selections[step] as string[]) || []).length > 0
-      : \!\!selections[step];
+      : !!selections[step];
 
   const blobMood =
     step === 0 ? "happy" : step === 1 ? "thinking" : step === 2 ? "excited" : "happy";
@@ -234,7 +234,7 @@ export default function OnboardingPage() {
           <div className="mt-auto animate-fade-up delay-300">
             <Button
               onClick={advance}
-              disabled={\!canContinue}
+              disabled={!canContinue}
               fullWidth
               size="xl"
             >
@@ -244,7 +244,7 @@ export default function OnboardingPage() {
         )}
 
         {/* Skip for non-multi non-name steps */}
-        {\!current.multi && step \!== 3 && step > 0 && (
+        {!current.multi && step !== 3 && step > 0 && (
           <button
             onClick={advance}
             className="text-center text-sm text-[#6a6a78] hover:text-[#9999a8] transition-colors mt-auto"

@@ -21,7 +21,7 @@ export default function AuthPage() {
   const [showPass, setShowPass] = useState(false);
 
   const savedName =
-    typeof window \!== "undefined"
+    typeof window !== "undefined"
       ? JSON.parse(localStorage.getItem("marlos-profile") || "{}").name || ""
       : "";
 
@@ -169,7 +169,7 @@ export default function AuthPage() {
           trailing={
             <button
               type="button"
-              onClick={() => setShowPass((v) => \!v)}
+              onClick={() => setShowPass((v) => !v)}
               className="text-[#9999a8] hover:text-[#c8c8d4] transition-colors"
             >
               {showPass ? (

@@ -22,7 +22,7 @@ const questions: Question[] = [
     question: "What is the powerhouse of the cell?",
     options: ["Nucleus", "Mitochondria", "Ribosome", "Cell membrane"],
     correct: 1,
-    explanation: "The mitochondria produces ATP (energy) for the cell through cellular respiration. That's why it's nicknamed the 'powerhouse'\!",
+    explanation: "The mitochondria produces ATP (energy) for the cell through cellular respiration. That's why it's nicknamed the 'powerhouse'!",
     icon: <Zap size={28} strokeWidth={1.8} />,
   },
   {
@@ -30,7 +30,7 @@ const questions: Question[] = [
     question: "What is 12 × 13?",
     options: ["144", "156", "148", "162"],
     correct: 1,
-    explanation: "12 × 13 = 12 × 10 + 12 × 3 = 120 + 36 = 156. Breaking multiplication into parts makes it easier\!",
+    explanation: "12 × 13 = 12 × 10 + 12 × 3 = 120 + 36 = 156. Breaking multiplication into parts makes it easier!",
     icon: <Hash size={28} strokeWidth={1.8} />,
   },
   {
@@ -121,7 +121,7 @@ export default function QuizPage() {
               Today&apos;s Quiz
             </h1>
             <p className="text-[#9999a8] text-sm leading-relaxed">
-              5 questions across different subjects. Take your time and do your best\!
+              5 questions across different subjects. Take your time and do your best!
             </p>
           </div>
 
@@ -151,10 +151,10 @@ export default function QuizPage() {
   if (phase === "complete") {
     const feedback =
       percentage >= 80
-        ? { msg: "Excellent work\!", mood: "excited" as const, color: "#00e5a0" }
+        ? { msg: "Excellent work!", mood: "excited" as const, color: "#00e5a0" }
         : percentage >= 60
-        ? { msg: "Good effort\!", mood: "happy" as const, color: "#4d9fff" }
-        : { msg: "Keep practising\!", mood: "neutral" as const, color: "#f5a623" };
+        ? { msg: "Good effort!", mood: "happy" as const, color: "#4d9fff" }
+        : { msg: "Keep practising!", mood: "neutral" as const, color: "#f5a623" };
 
     return (
       <div className="flex flex-col items-center justify-center min-h-full px-6 gap-8">
@@ -193,7 +193,7 @@ export default function QuizPage() {
             <Zap size={24} color="#00e5a0" strokeWidth={1.8} />
             <div>
               <p className="text-[#00e5a0] font-bold text-lg">+{score * 10} XP earned</p>
-              <p className="text-xs text-[#9999a8]">Keep streaks going for bonus XP\!</p>
+              <p className="text-xs text-[#9999a8]">Keep streaks going for bonus XP!</p>
             </div>
           </div>
 
@@ -257,7 +257,7 @@ export default function QuizPage() {
           {q.options.map((opt, i) => {
             const isSelected = selected === i;
             const isCorrect  = i === q.correct;
-            const state = \!answered
+            const state = !answered
               ? "idle"
               : isCorrect ? "correct"
               : isSelected ? "wrong"
@@ -309,7 +309,7 @@ export default function QuizPage() {
             }}
           >
             <p className="text-xs font-semibold mb-1.5" style={{ color: selected === q.correct ? "#00e5a0" : "#f5a623" }}>
-              {selected === q.correct ? "✓ Correct\!" : "Not quite — here's why:"}
+              {selected === q.correct ? "✓ Correct!" : "Not quite — here's why:"}
             </p>
             <p className="text-sm text-[#9999a8] leading-relaxed">{q.explanation}</p>
           </div>

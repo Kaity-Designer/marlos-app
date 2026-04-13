@@ -51,7 +51,7 @@ function getStoredUser() {
 
 export default function ProfilePage() {
   const router = useRouter();
-  const stored = typeof window \!== "undefined" ? getStoredUser() : { name: "Learner", email: "" };
+  const stored = typeof window !== "undefined" ? getStoredUser() : { name: "Learner", email: "" };
   const [name, setName] = useState(stored.name);
   const [email] = useState(stored.email);
   const [preferredMode, setPreferredMode] = useState<LearningMode>("text");
@@ -168,7 +168,7 @@ export default function ProfilePage() {
             {modeOptions.map((m) => (
               <button
                 key={m.id}
-                onClick={() => m.id \!== "spatial" && setPreferredMode(m.id)}
+                onClick={() => m.id !== "spatial" && setPreferredMode(m.id)}
                 disabled={m.id === "spatial"}
                 className={cn(
                   "flex flex-col items-start gap-1.5 p-4 rounded-2xl border transition-all duration-200 text-left",
