@@ -1,169 +1,270 @@
 "use client";
 
 import { useState } from "react";
+import { motion } from "framer-motion";
 import Link from "next/link";
-import { Hash, HeartPulse, Globe, Code2, PenLine, FlaskConical, Landmark, Languages, Search } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { Search, Sparkles, BookOpen, MessageCircle, ClipboardCheck, Zap, Trash2, Bookmark } from "lucide-react";
 
-const categories = ["All", "Maths", "Science", "History", "English", "Coding", "Languages"];
+type FilterType = "all" | "lessons" | "chats" | "tests" | "ar";
 
-const courses = [
-  { id: "1", title: "Introduction to Algebra", subject: "Maths", icon: <Hash size={28} strokeWidth={1.5} />, progress: 35, lessons: 12, color: "from-[#00e5a0]/20 to-[#00a872]/20", accent: "#00e5a0", difficulty: "Beginner" },
-  { id: "2", title: "The Human Body", subject: "Science", icon: <HeartPulse size={28} strokeWidth={1.5} />, progress: 60, lessons: 8, color: "from-[#4d9fff]/20 to-[#007ae5]/20", accent: "#4d9fff", difficulty: "Intermediate" },
-  { id: "3", title: "World War II", subject: "History", icon: <Globe size={28} strokeWidth={1.5} />, progress: 10, lessons: 15, color: "from-[#f5a623]/20 to-[#e07b00]/20", accent: "#f5a623", difficulty: "Intermediate" },
-  { id: "4", title: "Python Fundamentals", subject: "Coding", icon: <Code2 size={28} strokeWidth={1.5} />, progress: 0, lessons: 20, color: "from-[#a855f7]/20 to-[#7c3aed]/20", accent: "#a855f7", difficulty: "Beginner" },
-  { id: "5", title: "Shakespeare & Poetry", subject: "English", icon: <PenLine size={28} strokeWidth={1.5} />, progress: 80, lessons: 10, color: "from-[#f43f5e]/20 to-[#e11d48]/20", accent: "#f43f5e", difficulty: "Advanced" },
-  { id: "6", title: "Cell Biology", subject: "Science", icon: <FlaskConical size={28} strokeWidth={1.5} />, progress: 25, lessons: 14, color: "from-[#00e5a0]/20 to-[#4d9fff]/20", accent: "#00e5a0", difficulty: "Intermediate" },
-  { id: "7", title: "Ancient Rome", subject: "History", icon: <Landmark size={28} strokeWidth={1.5} />, progress: 0, lessons: 11, color: "from-[#f5a623]/20 to-[#f43f5e]/20", accent: "#f5a623", difficulty: "Beginner" },
-  { id: "8", title: "Conversational Spanish", subject: "Languages", icon: <Languages size={28} strokeWidth={1.5} />, progress: 45, lessons: 18, color: "from-[#ef4444]/20 to-[#f97316]/20", accent: "#ef4444", difficulty: "Beginner" },
+interface Lesson {
+  id: string;
+  title: string;
+  subject: string;
+  thumbnail: string;
+  duration: string;
+  status: "new" | "in-progress" | "completed";
+  type: "lesson" | "chat" | "test" | "ar";
+}
+
+const mockLessons: Lesson[] = [
+  {
+    id: "1",
+    title: "The Solar System",
+    subject: "Astronomy",
+    thumbnail: "https://images.unsplash.com/photo-1557941999-d9cfa59b79fd?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=200",
+    duration: "30 mins",
+    status: "in-progress",
+    type: "ar",
+  },
+  {
+    id: "2",
+    title: "Pythagorean Theorem",
+    subject: "Mathematics",
+    thumbnail: "https://images.unsplash.com/photo-1627983942134-dab65b677d94?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=200",
+    duration: "25 mins",
+    status: "completed",
+    type: "lesson",
+  },
+  {
+    id: "3",
+    title: "Cell Biology Basics",
+    subject: "Biology",
+    thumbnail: "https://images.unsplash.com/photo-1636386689060-37d233b5d345?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=200",
+    duration: "45 mins",
+    status: "new",
+    type: "lesson",
+  },
+  {
+    id: "4",
+    title: "Chat about Periodic Table",
+    subject: "Chemistry",
+    thumbnail: "https://images.unsplash.com/photo-1711185898441-f493426390cd?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=200",
+    duration: "15 mins",
+    status: "in-progress",
+    type: "chat",
+  },
+  {
+    id: "5",
+    title: "Ancient Civilizations",
+    subject: "History",
+    thumbnail: "https://images.unsplash.com/photo-1717606344894-66e5696bcd18?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=200",
+    duration: "40 mins",
+    status: "completed",
+    type: "lesson",
+  },
+  {
+    id: "6",
+    title: "Newton's Laws of Motion",
+    subject: "Physics",
+    thumbnail: "https://images.unsplash.com/photo-1758573466942-fbc45731e6eb?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=200",
+    duration: "35 mins",
+    status: "new",
+    type: "lesson",
+  },
+  {
+    id: "7",
+    title: "Molecular Structure in 3D",
+    subject: "Chemistry",
+    thumbnail: "https://images.unsplash.com/photo-1711185898441-f493426390cd?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=200",
+    duration: "20 mins",
+    status: "new",
+    type: "ar",
+  },
+  {
+    id: "8",
+    title: "Algebra Practice Test",
+    subject: "Mathematics",
+    thumbnail: "https://images.unsplash.com/photo-1627983942134-dab65b677d94?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=200",
+    duration: "50 mins",
+    status: "new",
+    type: "test",
+  },
 ];
 
-export default function LibraryPage() {
-  const [activeCategory, setActiveCategory] = useState("All");
-  const [search, setSearch] = useState("");
+function LessonCard({ 
+  lesson, 
+  onDelete, 
+  onBookmark 
+}: { 
+  lesson: Lesson; 
+  onDelete: (id: string) => void; 
+  onBookmark: (id: string) => void;
+}) {
+  const getTypeIcon = () => {
+    switch (lesson.type) {
+      case "lesson":
+        return <BookOpen className="w-4 h-4" />;
+      case "chat":
+        return <MessageCircle className="w-4 h-4" />;
+      case "test":
+        return <ClipboardCheck className="w-4 h-4" />;
+      case "ar":
+        return <Zap className="w-4 h-4" />;
+    }
+  };
 
-  const filtered = courses.filter((c) => {
-    const matchCat = activeCategory === "All" || c.subject === activeCategory;
-    const matchSearch = c.title.toLowerCase().includes(search.toLowerCase()) ||
-      c.subject.toLowerCase().includes(search.toLowerCase());
-    return matchCat && matchSearch;
-  });
+  const getStatusColor = () => {
+    switch (lesson.status) {
+      case "new":
+        return "bg-[#00e5a0] text-[#121212]";
+      case "in-progress":
+        return "bg-amber-500 text-white";
+      case "completed":
+        return "bg-gray-600 text-white";
+    }
+  };
 
   return (
-    <div className="flex flex-col min-h-full">
-      {/* Header */}
-      <div className="px-5 pt-14 pb-4">
-        <h1
-          className="text-2xl font-bold text-[#f5f5f7] mb-4 animate-fade-up"
-          style={{ letterSpacing: "-0.03em" }}
-        >
-          Library
-        </h1>
+    <motion.div
+      whileHover={{ scale: 1.02 }}
+      whileTap={{ scale: 0.98 }}
+      className="bg-[#1a1a1c] border border-white/5 rounded-[24px] overflow-hidden group"
+    >
+      {/* Image */}
+      <div className="relative h-40 bg-gradient-to-br from-[#00e5a0] to-[#00a076] overflow-hidden">
+        <img
+          src={lesson.thumbnail}
+          alt={lesson.title}
+          className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity"
+        />
+        {/* Type Badge */}
+        <div className="absolute top-2 right-2 bg-black/50 backdrop-blur-sm rounded-full p-2 text-[#00e5a0]">
+          {getTypeIcon()}
+        </div>
+        {/* Status Badge */}
+        <div className={`absolute top-2 left-2 px-3 py-1 rounded-full text-xs font-semibold ${getStatusColor()}`}>
+          {lesson.status === "new" ? "New" : lesson.status === "in-progress" ? "In Progress" : "Completed"}
+        </div>
+      </div>
 
-        {/* Search */}
-        <div className="relative animate-fade-up delay-100">
-          <svg
-            className="absolute left-4 top-1/2 -translate-y-1/2 text-[#5a5a68]"
-            width="16" height="16" viewBox="0 0 24 24" fill="none"
+      {/* Content */}
+      <div className="p-4">
+        <p className="text-white/60 text-xs uppercase tracking-wider mb-1">{lesson.subject}</p>
+        <h3 className="text-white font-semibold mb-2">{lesson.title}</h3>
+        <p className="text-white/50 text-sm mb-4">{lesson.duration}</p>
+
+        {/* Actions */}
+        <div className="flex gap-2">
+          <motion.button
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            onClick={() => onBookmark(lesson.id)}
+            className="flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-[#00e5a0]/20 hover:bg-[#00e5a0]/30 text-[#00e5a0] text-sm transition-colors"
           >
-            <circle cx="11" cy="11" r="8" stroke="currentColor" strokeWidth="1.8" />
-            <path d="M21 21l-4.35-4.35" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-          </svg>
+            <Bookmark className="w-4 h-4" />
+            Save
+          </motion.button>
+          <motion.button
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            onClick={() => onDelete(lesson.id)}
+            className="px-3 py-2 rounded-lg bg-red-500/20 hover:bg-red-500/30 text-red-400 text-sm transition-colors"
+          >
+            <Trash2 className="w-4 h-4" />
+          </motion.button>
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
+export default function LibraryPage() {
+  const [activeFilter, setActiveFilter] = useState<FilterType>("all");
+  const [lessons, setLessons] = useState(mockLessons);
+
+  const filteredLessons = lessons.filter((lesson) => {
+    if (activeFilter === "all") return true;
+    if (activeFilter === "lessons") return lesson.type === "lesson";
+    if (activeFilter === "chats") return lesson.type === "chat";
+    if (activeFilter === "tests") return lesson.type === "test";
+    if (activeFilter === "ar") return lesson.type === "ar";
+    return true;
+  });
+
+  const handleDelete = (id: string) => {
+    setLessons(lessons.filter((lesson) => lesson.id !== id));
+  };
+
+  const handleBookmark = (id: string) => {
+    console.log("Bookmarked:", id);
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-[#231f20] to-[#1c191a] pb-32">
+      {/* Header */}
+      <div className="px-5 pt-16 pb-6">
+        <h1 className="text-white text-center mb-6 text-2xl font-bold">Library</h1>
+      </div>
+
+      {/* Search Bar */}
+      <div className="px-5 mb-6">
+        <div className="relative">
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/40" />
           <input
-            type="search"
-            placeholder="Search courses…"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="w-full h-12 bg-[#141416] border border-[rgba(255,255,255,0.07)] rounded-2xl pl-11 pr-4 text-sm text-[#f5f5f7] placeholder:text-[#7a7a90] focus:outline-none focus:border-[rgba(0,229,160,0.4)] transition-all"
+            type="text"
+            placeholder="Search lessons..."
+            className="w-full bg-[#1a1a1c] border border-white/5 rounded-[20px] pl-12 pr-4 py-4 text-white/90 placeholder:text-white/40"
           />
         </div>
       </div>
 
-      {/* Categories */}
-      <div className="flex gap-2 px-5 overflow-x-auto scroll pb-3 animate-fade-up delay-200">
-        {categories.map((cat) =>
-          activeCategory === cat ? (
-            <div
-              key={cat}
-              role="button"
-              tabIndex={0}
-              onClick={() => setActiveCategory(cat)}
-              onKeyDown={(e) => e.key === "Enter" && setActiveCategory(cat)}
-              className="flex-shrink-0 px-4 py-2 rounded-xl text-sm font-semibold cursor-pointer select-none"
-              style={{
-                backgroundColor: "#00e5a0",
-                color: "#0a0a0a",
-                boxShadow: "0 0 16px rgba(0,229,160,0.2)",
-              }}
+      {/* Filter Tabs */}
+      <div className="px-5 mb-6">
+        <div className="flex gap-2 overflow-x-auto pb-2">
+          {[
+            { id: "all" as FilterType, label: "All" },
+            { id: "lessons" as FilterType, label: "Lessons" },
+            { id: "chats" as FilterType, label: "Chats" },
+            { id: "tests" as FilterType, label: "Tests" },
+            { id: "ar" as FilterType, label: "AR" },
+          ].map((filter) => (
+            <motion.button
+              key={filter.id}
+              onClick={() => setActiveFilter(filter.id)}
+              whileTap={{ scale: 0.95 }}
+              className={`px-5 py-2.5 rounded-full whitespace-nowrap transition-all ${
+                activeFilter === filter.id
+                  ? "bg-[#00e5a0] text-[#121212] shadow-[0px_4px_12px_0px_rgba(0,229,160,0.3)]"
+                  : "bg-[#1a1a1c] border border-white/5 text-white/60 hover:text-white"
+              }`}
             >
-              {cat}
-            </div>
-          ) : (
-            <button
-              key={cat}
-              onClick={() => setActiveCategory(cat)}
-              className="flex-shrink-0 px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-200 bg-[#141416] text-[#9999a8] border border-[rgba(255,255,255,0.07)] hover:text-[#f5f5f7]"
-            >
-              {cat}
-            </button>
-          )
-        )}
-      </div>
-
-      {/* Grid */}
-      <div className="flex-1 overflow-y-auto scroll px-5 pb-8">
-        <div className="grid grid-cols-1 gap-4">
-          {filtered.map((course, i) => (
-            <Link
-              key={course.id}
-              href={`/library/${course.id}`}
-              className="animate-fade-up"
-              style={{ animationDelay: `${i * 60 + 200}ms` }}
-            >
-              <div className="bg-[#141416] border border-[rgba(255,255,255,0.07)] rounded-3xl p-4 flex gap-4 hover-lift">
-                {/* Icon */}
-                <div
-                  className={cn("w-16 h-16 rounded-2xl flex items-center justify-center flex-shrink-0 bg-gradient-to-br", course.color)}
-                >
-                  {course.icon}
-                </div>
-
-                <div className="flex-1 min-w-0 space-y-2">
-                  <div>
-                    <div className="flex items-center gap-2 mb-0.5">
-                      <span
-                        className="text-[10px] font-semibold uppercase tracking-wider"
-                        style={{ color: course.accent }}
-                      >
-                        {course.subject}
-                      </span>
-                      <span className="text-[10px] text-[#3a3a3f]">·</span>
-                      <span className="text-[10px] text-[#5a5a68]">{course.difficulty}</span>
-                    </div>
-                    <p className="text-sm font-bold text-[#f5f5f7] leading-tight" style={{ letterSpacing: "-0.01em" }}>
-                      {course.title}
-                    </p>
-                  </div>
-
-                  <div className="space-y-1">
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs text-[#5a5a68]">{course.lessons} lessons</span>
-                      <span
-                        className="text-xs font-semibold"
-                        style={{ color: course.progress > 0 ? course.accent : "#3a3a3f" }}
-                      >
-                        {course.progress > 0 ? `${course.progress}%` : "Not started"}
-                      </span>
-                    </div>
-                    <div className="h-1 bg-[#1a1a1d] rounded-full overflow-hidden">
-                      <div
-                        className="h-full rounded-full transition-all duration-700"
-                        style={{
-                          width: `${course.progress}%`,
-                          background: course.accent,
-                        }}
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </Link>
+              {filter.label}
+            </motion.button>
           ))}
-
-          {filtered.length === 0 && (
-            <div className="flex flex-col items-center gap-3 py-16 text-center animate-fade-in">
-              <Search size={40} strokeWidth={1.5} color="#5a5a68" />
-              <p className="text-[#5a5a68] text-sm">No courses found</p>
-              <button
-                onClick={() => { setSearch(""); setActiveCategory("All"); }}
-                className="text-xs text-[#00e5a0] hover:underline"
-              >
-                Clear filters
-              </button>
-            </div>
-          )}
         </div>
       </div>
+
+      {/* Lessons Grid */}
+      <div className="px-5 grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+        {filteredLessons.map((lesson) => (
+          <LessonCard
+            key={lesson.id}
+            lesson={lesson}
+            onDelete={handleDelete}
+            onBookmark={handleBookmark}
+          />
+        ))}
+      </div>
+
+      {/* Empty State */}
+      {filteredLessons.length === 0 && (
+        <div className="flex flex-col items-center justify-center py-20 px-5">
+          <div className="text-6xl mb-4">📚</div>
+          <h3 className="text-white/80 mb-2">No items found</h3>
+          <p className="text-white/50 text-center">Try adjusting your filters or search terms</p>
+        </div>
+      )}
     </div>
   );
 }

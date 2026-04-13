@@ -1,254 +1,233 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 import Link from "next/link";
-import {
-  Zap, Flame, BookOpen, FlaskConical, Globe, ChevronRight,
-  Leaf, Triangle, Landmark, BookMarked, Brain, ArrowRight,
-} from "lucide-react";
+import { MessageCircle, Library, ClipboardCheck, User, Home, Headphones, Box, Compass, Sliders } from "lucide-react";
 import { BlobCharacter } from "@/components/ui/BlobCharacter";
-import { cn } from "@/lib/utils";
 
-type Course = {
-  id: string;
-  title: string;
-  subject: string;
-  icon: React.ReactNode;
-  progress: number;
-  duration: string;
-  difficulty: "Beginner" | "Intermediate" | "Advanced";
-  color: string;
-};
-
-const featuredCourses: Course[] = [
-  {
-    id: "1",
-    title: "Introduction to Algebra",
-    subject: "Maths",
-    icon: <Triangle size={36} strokeWidth={1.5} color="#fff" />,
-    progress: 35,
-    duration: "12 lessons",
-    difficulty: "Beginner",
-    color: "from-[#00e5a0] to-[#00a872]",
-  },
-  {
-    id: "2",
-    title: "The Human Body",
-    subject: "Biology",
-    icon: <FlaskConical size={36} strokeWidth={1.5} color="#fff" />,
-    progress: 60,
-    duration: "8 lessons",
-    difficulty: "Intermediate",
-    color: "from-[#4d9fff] to-[#007ae5]",
-  },
-  {
-    id: "3",
-    title: "World War II",
-    subject: "History",
-    icon: <Globe size={36} strokeWidth={1.5} color="#fff" />,
-    progress: 10,
-    duration: "15 lessons",
-    difficulty: "Intermediate",
-    color: "from-[#f5a623] to-[#e07b00]",
-  },
-];
-
-const quickTopics = [
-  { id: "a", label: "Photosynthesis",   icon: <Leaf size={20} strokeWidth={1.8} />,      color: "#00e5a0" },
-  { id: "b", label: "Pythagoras",       icon: <Triangle size={20} strokeWidth={1.8} />,  color: "#4d9fff" },
-  { id: "c", label: "The Roman Empire", icon: <Landmark size={20} strokeWidth={1.8} />,  color: "#f5a623" },
-  { id: "d", label: "Short stories",    icon: <BookMarked size={20} strokeWidth={1.8} />, color: "#a855f7" },
-];
-
-function getGreeting() {
+function WelcomeMessage() {
   const hour = new Date().getHours();
-  return hour < 12 ? "Good morning" : hour < 17 ? "Good afternoon" : "Good evening";
+  const greeting = hour < 12 ? "Good morning" : hour < 18 ? "Good afternoon" : "Good evening";
+  const [name, setName] = useState("Mia");
+  
+  useEffect(() => {
+    try {
+      const session = JSON.parse(localStorage.getItem("marlos-session") || "{}");
+      const profile = JSON.parse(localStorage.getItem("marlos-profile") || "{}");
+      setName(session.name || profile.name || "Mia");
+    } catch {
+      setName("Mia");
+    }
+  }, []);
+  
+  return (
+    <div className="text-center px-6">
+      <h1 className="text-white mb-1">{greeting}, {name}</h1>
+      <p className="text-white/70">What shall we learn today?</p>
+    </div>
+  );
 }
 
-function getUserData() {
-  if (typeof window === "undefined") return { name: "Learner" };
-  const session = JSON.parse(localStorage.getItem("marlos-session") || "{}");
-  const profile = JSON.parse(localStorage.getItem("marlos-profile") || "{}");
-  return { name: session.name || profile.name || "Learner" };
+function QuickAccessButton({ icon: Icon, label, onClick }: { icon: any; label: string; onClick: () => void }) {
+  return (
+    <motion.button
+      onClick={onClick}
+      className="flex items-center gap-3 bg-gradient-to-r from-[#00e5a0]/20 to-[#00e5a0]/10 backdrop-blur-sm rounded-full px-5 py-3.5 border border-[#00e5a0]/30"
+      whileHover={{ scale: 1.02, boxShadow: "0 0 20px rgba(0, 229, 160, 0.3)" }}
+      whileTap={{ scale: 0.98 }}
+    >
+      <Icon className="w-5 h-5 text-[#00e5a0]" />
+      <span className="text-white text-sm">{label}</span>
+    </motion.button>
+  );
+}
+
+function DraggableCard() {
+  const [isExpanded, setIsExpanded] = useState(false);
+  
+  const quickAccessItems = [
+    { icon: ClipboardCheck, label: "Tests" },
+    { icon: Box, label: "AR Mode" },
+    { icon: MessageCircle, label: "Chat" },
+    { icon: Headphones, label: "Podcast" },
+    { icon: Compass, label: "Explore" },
+    { icon: Sliders, label: "Tools" },
+  ];
+
+  return (
+    <motion.div
+      className="fixed bottom-[88px] left-0 right-0 px-5 z-20"
+      animate={{ 
+        height: isExpanded ? "auto" : "auto",
+      }}
+    >
+      <motion.div
+        className="backdrop-blur-xl bg-[#3D4149]/60 rounded-[40px] shadow-xl border border-white/10 overflow-hidden"
+        animate={{
+          paddingTop: 8,
+          paddingBottom: isExpanded ? 24 : 16,
+          paddingLeft: 16,
+          paddingRight: 16,
+        }}
+        transition={{ type: "spring", stiffness: 300, damping: 30 }}
+      >
+        {/* Drag Handle */}
+        <div className="flex items-center justify-center mb-3">
+          <div className="w-10 h-1 bg-white/20 rounded-full" />
+        </div>
+
+        {/* Title */}
+        <h2 className="text-white text-center text-sm">Your Learning Journey</h2>
+
+        {/* Tap to expand hint when collapsed */}
+        {!isExpanded && (
+          <motion.button
+            className="w-full text-white/40 text-xs mt-1.5 text-center"
+            onClick={() => setIsExpanded(true)}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.3 }}
+          >
+            Tap or drag up to expand
+          </motion.button>
+        )}
+
+        {/* Expanded Content */}
+        <motion.div
+          initial={false}
+          animate={{
+            height: isExpanded ? "auto" : 0,
+            opacity: isExpanded ? 1 : 0,
+          }}
+          transition={{ type: "spring", stiffness: 300, damping: 30 }}
+          className="overflow-hidden"
+        >
+          <div className="grid grid-cols-2 gap-3 mt-4">
+            {quickAccessItems.map((item, index) => (
+              <QuickAccessButton
+                key={index}
+                icon={item.icon}
+                label={item.label}
+                onClick={() => console.log(`Navigate to ${item.label}`)}
+              />
+            ))}
+          </div>
+        </motion.div>
+      </motion.div>
+    </motion.div>
+  );
 }
 
 export default function HomePage() {
-  const [name] = useState(() => (typeof window !== "undefined" ? getUserData().name : "Learner"));
-  const [greeting] = useState(() => getGreeting());
-  const [xp] = useState(420);
-  const [streak] = useState(5);
+  const [showTooltip, setShowTooltip] = useState(false);
 
   return (
-    <div className="flex flex-col min-h-full overflow-y-auto">
+    <div className="relative h-screen bg-gradient-to-b from-[#231f20] to-[#1c191a] overflow-hidden flex flex-col">
       {/* Header */}
-      <div
-        className="px-5 pt-14 pb-6"
-        style={{ background: "linear-gradient(180deg, rgba(13,25,18,0.95) 0%, rgba(15,15,16,0) 100%)" }}
-      >
-        <div className="flex items-center justify-between mb-6">
-          <div className="animate-fade-up">
-            <p className="text-xs text-[#9999a8] font-medium mb-0.5">{greeting}</p>
-            <h1 className="text-2xl font-bold text-[#f5f5f7]" style={{ letterSpacing: "-0.03em" }}>
-              Hey, {name}
-            </h1>
-          </div>
-          <Link href="/profile" className="animate-fade-up delay-100">
-            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#00e5a0] to-[#00a872] flex items-center justify-center text-[#0f0f10] font-bold text-sm shadow-[0_0_16px_rgba(0,229,160,0.3)]">
-              {name[0]?.toUpperCase()}
-            </div>
-          </Link>
-        </div>
-
-        {/* XP + Streak bar */}
-        <div className="flex gap-3 animate-fade-up delay-200">
-          <div className="flex-1 flex items-center gap-3 bg-[#141416] border border-[rgba(255,255,255,0.07)] rounded-2xl px-4 py-3">
-            <Zap size={20} color="#00e5a0" strokeWidth={2} />
-            <div>
-              <p className="text-[10px] text-[#9999a8] uppercase font-semibold tracking-wider">XP</p>
-              <p className="text-base font-bold text-[#f5f5f7]">{xp.toLocaleString()}</p>
-            </div>
-          </div>
-          <div className="flex-1 flex items-center gap-3 bg-[#141416] border border-[rgba(255,255,255,0.07)] rounded-2xl px-4 py-3">
-            <Flame size={20} color="#f5a623" strokeWidth={2} />
-            <div>
-              <p className="text-[10px] text-[#9999a8] uppercase font-semibold tracking-wider">Streak</p>
-              <p className="text-base font-bold text-[#f5f5f7]">{streak} days</p>
-            </div>
-          </div>
-        </div>
+      <div className="pt-8 pb-4 flex-shrink-0">
+        <WelcomeMessage />
       </div>
 
-      <div className="flex flex-col gap-8 px-5 pb-8">
-        {/* AI Tutor quick start */}
-        <Link href="/chat" className="block animate-fade-up delay-200">
-          <div
-            className="relative rounded-3xl p-5 overflow-hidden"
-            style={{
-              background: "linear-gradient(135deg, #0d1f18 0%, #0f1a14 100%)",
-              border: "1px solid rgba(0,229,160,0.2)",
-              boxShadow: "0 0 40px rgba(0,229,160,0.08)",
-            }}
-          >
-            <div className="absolute -right-8 -top-8 w-40 h-40 rounded-full opacity-20"
-              style={{ background: "radial-gradient(circle, #00e5a0 0%, transparent 70%)" }} />
-            <div className="relative flex items-center gap-4">
-              <BlobCharacter size={56} mood="happy" animated />
-              <div className="flex-1 min-w-0">
-                <p className="text-xs text-[#00e5a0] font-semibold uppercase tracking-wider mb-1">AI Tutor</p>
-                <p className="text-base font-bold text-[#f5f5f7]" style={{ letterSpacing: "-0.02em" }}>
-                  What do you want to explore today?
-                </p>
-                <p className="text-xs text-[#9999a8] mt-1 flex items-center gap-1">
-                  Ask me anything <ArrowRight size={11} strokeWidth={2} />
-                </p>
-              </div>
-            </div>
-          </div>
-        </Link>
+      {/* Central Blob Section */}
+      <div className="absolute top-[20%] left-1/2 -translate-x-1/2 flex items-center justify-center">
+        {/* Background glow effect */}
+        <motion.div
+          className="absolute w-[350px] h-[350px] rounded-full"
+          style={{
+            background: "radial-gradient(circle, rgba(0, 229, 160, 0.3) 0%, rgba(0, 229, 160, 0) 70%)",
+          }}
+          animate={{
+            scale: [1, 1.2, 1],
+            opacity: [0.5, 0.8, 0.5],
+          }}
+          transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+        />
 
-        {/* Continue learning */}
-        <section className="animate-fade-up delay-300">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-base font-bold text-[#f5f5f7]" style={{ letterSpacing: "-0.02em" }}>
-              Continue learning
-            </h2>
-            <Link href="/library" className="text-xs text-[#00e5a0] font-medium flex items-center gap-1">
-              See all <ChevronRight size={12} strokeWidth={2.5} />
-            </Link>
-          </div>
+        {/* Central Blob Character */}
+        <motion.div
+          className="relative z-10 cursor-pointer w-[250px] h-[250px] flex items-center justify-center"
+          onHoverStart={() => setShowTooltip(true)}
+          onHoverEnd={() => setShowTooltip(false)}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+        >
+          <Link href="/chat" className="w-full h-full flex items-center justify-center">
+            <BlobCharacter size={120} mood="happy" animated />
+          </Link>
+        </motion.div>
 
-          <div className="flex gap-4 overflow-x-auto pb-1 -mx-5 px-5">
-            {featuredCourses.map((course, i) => (
-              <Link
-                key={course.id}
-                href={`/library/${course.id}`}
-                className="flex-shrink-0 w-60"
-                style={{ animationDelay: `${i * 80 + 300}ms` }}
+        {/* Tooltip */}
+        <motion.div
+          className="absolute top-[calc(100%+20px)] left-1/2 -translate-x-1/2 bg-[#231F20] text-white px-4 py-2 rounded-full text-sm shadow-lg whitespace-nowrap"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: showTooltip ? 1 : 0, y: showTooltip ? 0 : 10 }}
+          transition={{ duration: 0.2 }}
+        >
+          Ask me anything! 💬
+        </motion.div>
+      </div>
+
+      {/* Draggable Card */}
+      <DraggableCard />
+
+      {/* Bottom Navigation */}
+      <div className="fixed bottom-6 left-1/2 -translate-x-1/2 w-[90%] max-w-[400px] z-30">
+        <div className="backdrop-blur-xl bg-[#2D2D2D]/95 rounded-[40px] px-4 py-3 shadow-2xl border border-white/5">
+          <div className="flex items-end justify-between">
+            {[
+              { icon: Home, label: "Home", active: true, center: false },
+              { icon: Library, label: "Library", active: false, center: false },
+              { icon: MessageCircle, label: "Marlos", active: false, center: true },
+              { icon: ClipboardCheck, label: "Tests", active: false, center: false },
+              { icon: User, label: "Profile", active: false, center: false },
+            ].map((item) => (
+              <Link 
+                key={item.label}
+                href={item.label === "Home" ? "/home" : item.label === "Library" ? "/library" : item.label === "Marlos" ? "/chat" : item.label === "Tests" ? "/quiz" : "/profile"}
               >
-                <div className="bg-[#141416] border border-[rgba(255,255,255,0.07)] rounded-3xl overflow-hidden">
-                  <div className={cn("h-28 flex items-center justify-center bg-gradient-to-br", course.color)}>
-                    {course.icon}
-                  </div>
-                  <div className="p-4 space-y-3">
-                    <div>
-                      <p className="text-[10px] text-[#9999a8] uppercase font-semibold tracking-wider mb-1">
-                        {course.subject}
-                      </p>
-                      <p className="text-sm font-bold text-[#f5f5f7]" style={{ letterSpacing: "-0.01em" }}>
-                        {course.title}
-                      </p>
-                    </div>
-                    <div className="space-y-1.5">
-                      <div className="flex items-center justify-between">
-                        <span className="text-xs text-[#9999a8]">{course.duration}</span>
-                        <span className="text-xs font-semibold text-[#00e5a0]">{course.progress}%</span>
-                      </div>
-                      <div className="h-1.5 bg-[#1a1a1d] rounded-full overflow-hidden">
-                        <div
-                          className="h-full bg-[#00e5a0] rounded-full transition-all duration-700"
-                          style={{ width: `${course.progress}%` }}
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </section>
-
-        {/* Quick topics */}
-        <section className="animate-fade-up delay-400">
-          <h2 className="text-base font-bold text-[#f5f5f7] mb-4" style={{ letterSpacing: "-0.02em" }}>
-            Quick topics
-          </h2>
-          <div className="grid grid-cols-2 gap-3">
-            {quickTopics.map((topic, i) => (
-              <Link
-                key={topic.id}
-                href={`/chat?topic=${encodeURIComponent(topic.label)}`}
-                style={{ animationDelay: `${i * 60 + 400}ms` }}
-              >
-                <div className="flex items-center gap-3 p-4 rounded-2xl border border-[rgba(255,255,255,0.07)] bg-[#141416] hover:bg-[#1a1a1d] transition-all duration-200 active:scale-[0.97]">
-                  <span style={{ color: topic.color }}>{topic.icon}</span>
-                  <span className="text-sm font-semibold text-[#f5f5f7] leading-tight">{topic.label}</span>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </section>
-
-        {/* Daily challenge */}
-        <section className="animate-fade-up delay-500">
-          <Link href="/quiz">
-            <div
-              className="relative rounded-3xl p-5 overflow-hidden border"
-              style={{
-                background: "linear-gradient(135deg, #1a0f2e 0%, #120f1a 100%)",
-                borderColor: "rgba(168,85,247,0.25)",
-              }}
-            >
-              <div className="absolute -right-6 -bottom-6 w-32 h-32 rounded-full opacity-20"
-                style={{ background: "radial-gradient(circle, #a855f7 0%, transparent 70%)" }} />
-              <div className="flex items-center gap-4 relative">
-                <div
-                  className="w-14 h-14 rounded-2xl flex items-center justify-center"
-                  style={{ background: "rgba(168,85,247,0.15)", border: "1px solid rgba(168,85,247,0.2)" }}
+                <motion.button
+                  className="flex flex-col items-center gap-1.5 flex-1"
+                  whileTap={{ scale: 0.9 }}
                 >
-                  <Brain size={28} color="#a855f7" strokeWidth={1.5} />
-                </div>
-                <div>
-                  <p className="text-xs font-semibold text-[#a855f7] uppercase tracking-wider mb-1">Daily challenge</p>
-                  <p className="text-sm font-bold text-[#f5f5f7]">5 questions · 3 min</p>
-                  <p className="text-xs text-[#9999a8] mt-0.5 flex items-center gap-1">
-                    <Zap size={10} strokeWidth={2} color="#f5a623" /> +50 XP on completion
-                  </p>
-                </div>
-              </div>
-            </div>
-          </Link>
-        </section>
+                  <div
+                    className={`rounded-full flex items-center justify-center transition-all ${
+                      item.center
+                        ? "w-16 h-16 bg-gradient-to-br from-[#00e5a0] to-[#00a076] shadow-lg shadow-[#00e5a0]/40 -mt-4"
+                        : item.active
+                        ? "w-12 h-12 bg-[#00e5a0]/20"
+                        : "w-12 h-12 bg-transparent"
+                    }`}
+                  >
+                    <item.icon
+                      className={`${item.center ? "w-7 h-7" : "w-5 h-5"} ${
+                        item.center || item.active ? "text-white" : "text-white/50"
+                      }`}
+                    />
+                  </div>
+                  <span
+                    className={`text-[10px] ${
+                      item.center || item.active ? "text-[#00e5a0]" : "text-white/50"
+                    }`}
+                  >
+                    {item.label}
+                  </span>
+                </motion.button>
+              </Link>
+            ))}
+          </div>
+        </div>
       </div>
+
+      <style>{`
+        .scrollbar-hide::-webkit-scrollbar {
+          display: none;
+        }
+        .scrollbar-hide {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+      `}</style>
     </div>
   );
 }
